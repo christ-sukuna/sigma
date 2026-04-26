@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGMA MDX — Connexion</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #070d15; }
+    .auth-card {
+      background: #0d1825;
+      border: 1px solid #1a2a3a;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+    .auth-logo { text-align: center; margin-bottom: 2rem; }
+    .auth-logo .logo-text { font-size: 1.5rem; font-weight: 800; color: #fff; }
+    .auth-logo .logo-accent { color: #00e676; }
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 2rem; border-radius: 10px; overflow: hidden; border: 1px solid #1a2a3a; }
+    .auth-tab {
+      flex: 1; padding: .7rem; text-align: center; cursor: pointer;
+      font-weight: 600; font-size: .9rem; color: #6b8095;
+      background: #0a1520; border: none; transition: all .2s;
+    }
+    .auth-tab.active { background: #00e676; color: #070d15; }
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: .85rem; color: #8a9ab0; margin-bottom: .45rem; font-weight: 500; }
+    .form-group input {
+      width: 100%; padding: .75rem 1rem;
+      background: #0a1520; border: 1px solid #1a2a3a; border-radius: 10px;
+      color: #e0eaf5; font-size: .95rem; outline: none; transition: border .2s;
+      box-sizing: border-box;
+    }
+    .form-group input:focus { border-color: #00e676; }
+    .btn-auth {
+      width: 100%; padding: .9rem; background: #00e676; color: #070d15;
+      border: none; border-radius: 10px; font-weight: 700; font-size: 1rem;
+      cursor: pointer; margin-top: .5rem; transition: opacity .2s;
+    }
+    .btn-auth:hover { opacity: .88; }
+    .btn-auth:disabled { opacity: .5; cursor: not-allowed; }
+    .auth-error {
+      background: rgba(255,82,82,.12); border: 1px solid rgba(255,82,82,.3);
+      border-radius: 8px; color: #ff5252; padding: .75rem 1rem;
+      font-size: .85rem; margin-bottom: 1rem; display: none;
+    }
+    .auth-success {
+      background: rgba(0,230,118,.1); border: 1px solid rgba(0,230,118,.3);
+      border-radius: 8px; color: #00e676; padding: .75rem 1rem;
+      font-size: .85rem; margin-bottom: 1rem; display: none;
+    }
+    .auth-footer { text-align: center; margin-top: 1.5rem; color: #6b8095; font-size: .85rem; }
+    .auth-footer a { color: #00e676; text-decoration: none; }
+    .plan-badge {
+      display: flex; align-items: center; gap: .5rem;
+      background: rgba(0,230,118,.08); border: 1px solid rgba(0,230,118,.2);
+      border-radius: 8px; padding: .75rem 1rem; margin-bottom: 1.5rem;
+      color: #8a9ab0; font-size: .82rem;
+    }
+    .plan-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #00e676; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-text">SIGMA <span class="logo-accent">MDX</span></div>
+      <div style="color:#6b8095;font-size:.85rem;margin-top:.3rem">Plateforme de bots WhatsApp</div>
+    </div>
+
+    <div class="plan-badge">
+      <div class="dot"></div>
+      Compte gratuit — 1 bot VPS inclus
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
+      <button class="auth-tab" onclick="switchTab('register')">Créer un compte</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="form-panel active" id="panel-login">
+      <div class="auth-error" id="login-error"></div>
+      <form onsubmit="doLogin();return false;" autocomplete="on">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="exemple@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <div class="pass-wrap">
+            <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" class="pass-toggle" onclick="togglePass('login-pass',this)" aria-label="Afficher le mot de passe">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth" id="login-btn">Se connecter</button>
+      </form>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="form-panel" id="panel-register">
+      <div class="auth-error" id="reg-error"></div>
+      <div class="auth-success" id="reg-success"></div>
+      <form onsubmit="doRegister();return false;" autocomplete="on">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="exemple@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe <span style="color:#6b8095">(min. 6 caractères)</span></label>
+          <div class="pass-wrap">
+            <input type="password" id="reg-pass" placeholder="••••••••" autocomplete="new-password" />
+            <button type="button" class="pass-toggle" onclick="togglePass('reg-pass',this)" aria-label="Afficher le mot de passe">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Numéro WhatsApp <span style="color:#6b8095">(optionnel)</span></label>
+          <input type="tel" id="reg-phone" placeholder="+32466304227" />
+        </div>
+        <button type="submit" class="btn-auth" id="reg-btn">Créer mon compte</button>
+      </form>
+    </div>
+
+    <div class="auth-footer">
+      <a href="/">← Retour à l'accueil</a>
+    </div>
+  </div>
+
+  <script>
+    // Read optional redirect param
+    const _redirectTo = new URLSearchParams(window.location.search).get('redirect') || '/vps.html';
+
+    // If already logged in, redirect
+    const token = localStorage.getItem('sigma_token');
+    if (token) window.location.href = _redirectTo;
+
+    function togglePass(inputId, btn) {
+      const inp = document.getElementById(inputId);
+      const isHidden = inp.type === 'password';
+      inp.type = isHidden ? 'text' : 'password';
+      btn.innerHTML = isHidden
+        ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+        : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      btn.style.color = isHidden ? '#00e676' : '';
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.auth-tab').forEach((t, i) => {
+        t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+      });
+      document.getElementById('panel-login').classList.toggle('active', tab === 'login');
+      document.getElementById('panel-register').classList.toggle('active', tab === 'register');
+    }
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function hideError(id) { document.getElementById(id).style.display = 'none'; }
+
+    async function doLogin() {
+      hideError('login-error');
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-pass').value;
+      if (!email || !password) return showError('login-error', 'Email et mot de passe requis.');
+
+      const btn = document.getElementById('login-btn');
+      btn.disabled = true; btn.textContent = 'Connexion...';
+      try {
+        const r = await fetch('/api/auth/login', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await r.json();
+        if (!r.ok) { showError('login-error', data.error || 'Erreur.'); return; }
+        localStorage.setItem('sigma_token', data.token);
+        localStorage.setItem('sigma_user', JSON.stringify(data.user));
+        window.location.href = _redirectTo;
+      } catch {
+        showError('login-error', 'Erreur réseau. Réessayez.');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Se connecter';
+      }
+    }
+
+    async function doRegister() {
+      hideError('reg-error');
+      document.getElementById('reg-success').style.display = 'none';
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-pass').value;
+      const phone = document.getElementById('reg-phone').value.trim();
+      if (!email || !password) return showError('reg-error', 'Email et mot de passe requis.');
+
+      const btn = document.getElementById('reg-btn');
+      btn.disabled = true; btn.textContent = 'Création...';
+      try {
+        const r = await fetch('/api/auth/register', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, phone })
+        });
+        const data = await r.json();
+        if (!r.ok) { showError('reg-error', data.error || 'Erreur.'); return; }
+        localStorage.setItem('sigma_token', data.token);
+        localStorage.setItem('sigma_user', JSON.stringify(data.user));
+        window.location.href = _redirectTo;
+      } catch {
+        showError('reg-error', 'Erreur réseau. Réessayez.');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Créer mon compte';
+      }
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        if (document.getElementById('panel-login').classList.contains('active')) doLogin();
+        else doRegister();
+      }
+    });
+  </script>
+</body>
+</html>

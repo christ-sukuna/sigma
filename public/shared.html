@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shared Bot — Sigma MDX</title>
+  <meta name="description" content="Use the Sigma MDX WhatsApp bot on your number — no hosting, no setup. Just scan a QR code and go." />
+  <meta name="theme-color" content="#060912" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Shared Bot — Sigma MDX" />
+  <meta property="og:description" content="Run the Sigma MDX WhatsApp bot on your number in seconds. No hosting, no setup. Just scan and go." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:url" content="https://sigma-mdx.replit.app/shared.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    .page-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 5rem;
+      text-align: center;
+    }
+    .page-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, rgba(0,230,118,0.15), rgba(167,139,250,0.1));
+      border: 1px solid rgba(0,230,118,0.2);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.75rem;
+    }
+    .page-wrap h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -.04em;
+      margin-bottom: .6rem;
+    }
+    .page-wrap > p {
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      font-size: .95rem;
+      line-height: 1.65;
+    }
+
+    /* Mode toggle */
+    .mode-toggle { display: flex; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-bottom: 1.25rem; gap: 4px; }
+    .mode-btn { flex: 1; padding: .5rem; border-radius: 7px; font-size: .82rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-muted); transition: all .2s; }
+    .mode-btn.mode-active { background: rgba(0,230,118,.12); color: var(--neon); border: 1px solid rgba(0,230,118,.25); }
+
+    /* Pairing code display */
+    .pair-code { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; letter-spacing: .15em; color: var(--neon); background: rgba(0,230,118,.07); border: 1px solid rgba(0,230,118,.2); border-radius: 12px; padding: 1.25rem 2rem; display: none; margin: 1.25rem 0; }
+    .pair-waiting { color: var(--text-dim); font-size: .875rem; padding: 2rem 0; }
+
+    /* Disconnect alert */
+    .disconnect-alert {
+      display: none; align-items: flex-start; gap: .75rem;
+      background: rgba(255,71,87,.07); border: 1px solid rgba(255,71,87,.25);
+      border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; text-align: left;
+    }
+    .disconnect-alert .alert-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .disconnect-alert p { font-size: .85rem; color: var(--text-muted); margin: 0; line-height: 1.55; }
+    .disconnect-alert strong { color: #ff4757; }
+
+    /* Phone form */
+    .phone-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+    .phone-card label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: .5rem;
+    }
+    .phone-row { display: flex; gap: .75rem; }
+    .phone-row input { flex: 1; }
+
+    /* QR area */
+    .qr-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.25rem;
+      transition: border-color .3s;
+    }
+    .qr-card.active { border-color: rgba(0,230,118,0.25); }
+    .qr-image-wrap {
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.25rem 0;
+    }
+    .qr-image-wrap img {
+      max-width: 230px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    }
+    .qr-placeholder {
+      color: var(--text-dim);
+      font-size: .875rem;
+    }
+    .qr-hint {
+      font-size: .8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Connected */
+    .connected-card {
+      background: rgba(0,230,118,0.04);
+      border: 1px solid rgba(0,230,118,0.18);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+    }
+    .connected-icon { font-size: 3.5rem; margin-bottom: 1.25rem; }
+    .connected-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--neon);
+      margin-bottom: .6rem;
+    }
+    .connected-card p { color: var(--text-muted); margin-bottom: 1.75rem; font-size: .9rem; }
+    .cmd-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: rgba(0,0,0,.3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .4rem .875rem;
+      font-family: monospace;
+      font-size: .85rem;
+      color: var(--neon);
+      margin-bottom: 1.75rem;
+    }
+    .cmd-tag {
+      display: inline-block;
+      background: rgba(0,230,118,.07);
+      border: 1px solid rgba(0,230,118,.18);
+      border-radius: 6px;
+      padding: .15rem .55rem;
+      font-family: monospace;
+      font-size: .75rem;
+      color: var(--neon);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="grid-bg">
+
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.102.546 4.07 1.5 5.78L.057 23.617a.75.75 0 0 0 .934.876l6.141-1.608A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.731 9.731 0 0 1-4.953-1.353l-.354-.213-3.642.955.97-3.546-.232-.365A9.708 9.708 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      </div>
+      <span class="logo-name">Sigma <span>MDX</span></span>
+    </a>
+    <nav id="nav-links">
+      <a href="/" data-i18n="nav.home">Accueil</a>
+      <a href="/builder.html" data-i18n="nav.builder">Créateur</a>
+      <a href="/session.html" data-i18n="nav.session">Obtenir Session</a>
+      <a href="/deploy.html" data-i18n="nav.deploy">Guide Déploiement</a>
+      <a href="/vps.html">Mes Bots</a>
+      <a href="/login.html" class="nav-cta" id="nav-auth-link">Connexion</a>
+    </nav>
+    <div class="navbar-end">
+      <button class="lang-btn" id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <div class="page-icon">⚡</div>
+    <h1 data-i18n="shared.title">Bot Partagé</h1>
+    <p data-i18n="shared.sub">
+      Exécutez le bot Sigma MDX sur votre numéro WhatsApp — rien à installer, rien à configurer. Entrez votre numéro, scannez le QR code, et c'est parti.
+    </p>
+
+    <!-- Info notice -->
+    <div style="background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.18);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;text-align:left">
+      <div style="display:flex;align-items:flex-start;gap:.6rem">
+        <span style="font-size:1rem;margin-top:.05rem">✅</span>
+        <div>
+          <p style="font-size:.82rem;color:var(--text-muted);margin:0;line-height:1.6">
+            <strong style="color:var(--text)" data-i18n="shared.notice.title">Chacun a son propre bot.</strong>
+            <span data-i18n="shared.notice.body"> Chaque personne qui se connecte obtient une instance de bot complètement indépendante. Plusieurs utilisateurs peuvent être actifs en même temps — aucune interférence. Vous voulez un bot 24h/24 ? Utilisez le <a href="/builder.html">Créateur</a> pour une version auto-hébergée.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Setup form -->
+    <div id="setup-form">
+      <div class="phone-card">
+        <label style="font-size:.8rem;font-weight:600;color:var(--text);display:block;margin-bottom:.6rem">Méthode de connexion</label>
+        <div class="mode-toggle">
+          <button class="mode-btn mode-active" id="mode-qr" onclick="setMode('qr')">📷 QR Code</button>
+          <button class="mode-btn" id="mode-pair" onclick="setMode('pair')">🔢 Code de couplage</button>
+        </div>
+        <label for="phoneInput" data-i18n="shared.phone.label">Votre numéro WhatsApp</label>
+        <div class="phone-row">
+          <input class="form-input" id="phoneInput" type="tel" placeholder="+1234567890" />
+          <button class="btn btn-primary" onclick="startDeploy()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span data-i18n="shared.btn.start">Démarrer</span>
+          </button>
+        </div>
+        <div id="form-error" class="alert alert-error" style="margin-top:.875rem;text-align:left"></div>
+      </div>
+      <p style="font-size:.8rem;color:var(--text-dim)" data-i18n="shared.terms">
+        En utilisant le bot partagé, vous acceptez de ne pas l'utiliser à des fins de spam ou d'activités illégales.
+      </p>
+    </div>
+
+    <!-- QR section -->
+    <div id="qr-section" style="display:none">
+      <div class="qr-card active">
+        <div id="status-area" style="margin-bottom:1rem">
+          <span class="badge badge-waiting pulse" id="status-badge">
+            <span>⏳</span> En attente...
+          </span>
+        </div>
+
+        <!-- QR code box -->
+        <div class="qr-image-wrap" id="qr-box">
+          <div class="qr-placeholder pulse">Génération du QR code...</div>
+        </div>
+
+        <!-- Pairing code box -->
+        <div id="pair-box" style="display:none;text-align:center;padding:1rem 0">
+          <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.75rem">Votre code de couplage :</p>
+          <div class="pair-code" id="pair-code-display"></div>
+          <div class="pair-waiting" id="pair-waiting">⏳ Génération du code en cours...</div>
+          <p style="font-size:.78rem;color:var(--text-dim);margin-top:.5rem">
+            WhatsApp → Paramètres → Appareils liés → Lier avec un numéro de téléphone → entrez le code
+          </p>
+        </div>
+
+        <div id="qr-hint-text" class="qr-hint" data-i18n="shared.qr.hint">
+          Ouvrez WhatsApp → Paramètres → Appareils liés → Lier un appareil → scannez le QR ci-dessus.
+        </div>
+        <div id="pair-hint-text" class="qr-hint" style="display:none">
+          Ouvrez WhatsApp → Paramètres → Appareils liés → Lier avec un numéro → entrez le code affiché ci-dessus.
+        </div>
+      </div>
+
+      <button class="btn btn-ghost btn-sm" onclick="stopSession()" style="margin-top:.75rem">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <span data-i18n="shared.stop">Arrêter &amp; Déconnecter</span>
+      </button>
+    </div>
+
+    <!-- Connected -->
+    <div id="connected-section" style="display:none">
+      <!-- Disconnect alert -->
+      <div class="disconnect-alert" id="disconnect-alert">
+        <div class="alert-icon">⚠️</div>
+        <div>
+          <p><strong>Bot déconnecté !</strong> Votre bot WhatsApp a été déconnecté. Il va tenter de se reconnecter automatiquement, mais vous pouvez aussi le relancer manuellement.</p>
+          <button class="btn btn-ghost btn-sm" onclick="resetPage()" style="margin-top:.6rem">🔄 Relancer le bot</button>
+        </div>
+      </div>
+      <div class="connected-card">
+        <div class="connected-icon">✅</div>
+        <h2 data-i18n="shared.connected.title">Connecté !</h2>
+        <p>
+          <span data-i18n="shared.connected.sub">Votre bot Sigma MDX est maintenant actif.</span><br /><br />
+          <strong style="color:var(--text)" data-i18n="shared.connected.test">Pour tester : Ouvrez WhatsApp → Messages Enregistrés (votre propre chat) → tapez une commande ci-dessous :</strong>
+        </p>
+
+        <div style="text-align:left;margin-bottom:1.5rem">
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">⚡ General</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+            <code class="cmd-tag">.menu</code><code class="cmd-tag">.list</code><code class="cmd-tag">.ping</code>
+            <code class="cmd-tag">.alive</code><code class="cmd-tag">.uptime</code><code class="cmd-tag">.repo</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">🤖 AI</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+            <code class="cmd-tag">.ai &lt;question&gt;</code><code class="cmd-tag">.imagine &lt;prompt&gt;</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">📥 Downloader</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+            <code class="cmd-tag">.ytmp3 &lt;url&gt;</code><code class="cmd-tag">.ytmp4 &lt;url&gt;</code>
+            <code class="cmd-tag">.tiktok &lt;url&gt;</code><code class="cmd-tag">.instagram &lt;url&gt;</code>
+            <code class="cmd-tag">.facebook &lt;url&gt;</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">🔍 Search</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+            <code class="cmd-tag">.google &lt;query&gt;</code><code class="cmd-tag">.yt &lt;query&gt;</code>
+            <code class="cmd-tag">.weather &lt;city&gt;</code><code class="cmd-tag">.news &lt;topic&gt;</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">🛠️ Tools</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+            <code class="cmd-tag">.fetch &lt;url&gt;</code><code class="cmd-tag">.ssweb &lt;url&gt;</code>
+            <code class="cmd-tag">.translate &lt;lang&gt; &lt;text&gt;</code><code class="cmd-tag">.ebinary &lt;text&gt;</code>
+            <code class="cmd-tag">.debinary &lt;binary&gt;</code><code class="cmd-tag">.ebase &lt;text&gt;</code>
+            <code class="cmd-tag">.dbase &lt;base64&gt;</code><code class="cmd-tag">.remini &lt;url&gt;</code>
+            <code class="cmd-tag">.domain &lt;domain&gt;</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">🎨 Converter</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+            <code class="cmd-tag">.sticker</code><code class="cmd-tag">.toimg</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">👑 Owner</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+            <code class="cmd-tag">.owner</code><code class="cmd-tag">.getpp @user</code>
+            <code class="cmd-tag">.vv</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">👥 Group</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+            <code class="cmd-tag">.ginfo</code><code class="cmd-tag">.members</code>
+            <code class="cmd-tag">.adminlist</code><code class="cmd-tag">.getgcpp</code>
+            <code class="cmd-tag">.tagall &lt;msg&gt;</code><code class="cmd-tag">.tagadmins</code>
+            <code class="cmd-tag">.hidetag &lt;msg&gt;</code>
+            <code class="cmd-tag">.kick @user</code><code class="cmd-tag">.add &lt;number&gt;</code>
+            <code class="cmd-tag">.promote @user</code><code class="cmd-tag">.demote @user</code>
+            <code class="cmd-tag">.mute</code><code class="cmd-tag">.unmute</code>
+            <code class="cmd-tag">.link</code><code class="cmd-tag">.revoke</code>
+            <code class="cmd-tag">.subject &lt;name&gt;</code><code class="cmd-tag">.desc &lt;text&gt;</code>
+            <code class="cmd-tag">.setgpp</code><code class="cmd-tag">.newgroup &lt;name&gt;</code>
+            <code class="cmd-tag">.listrequests</code><code class="cmd-tag">.acceptall</code>
+            <code class="cmd-tag">.rejectall</code><code class="cmd-tag">.killgc</code>
+            <code class="cmd-tag">.leave</code>
+          </div>
+
+          <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem;margin-top:.8rem;text-transform:uppercase;letter-spacing:.06em">🔧 Misc Owner</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+            <code class="cmd-tag">.join &lt;link&gt;</code><code class="cmd-tag">.mygroups</code>
+            <code class="cmd-tag">.del</code><code class="cmd-tag">.block</code>
+            <code class="cmd-tag">.unblock</code><code class="cmd-tag">.blocklist</code>
+            <code class="cmd-tag">.jid</code>
+          </div>
+        </div>
+
+        <p style="font-size:.78rem;color:var(--text-dim);margin-bottom:1.5rem" data-i18n="shared.connected.menu">
+          Envoyez .menu pour voir tout sur WhatsApp avec les catégories et descriptions.
+        </p>
+        <button class="btn btn-ghost" onclick="resetPage()" data-i18n="shared.connected.another">
+          Utiliser un autre numéro
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/shared.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script>
+    (function() {
+      const t = localStorage.getItem('sigma_token');
+      const u = JSON.parse(localStorage.getItem('sigma_user') || '{}');
+      const link = document.getElementById('nav-auth-link');
+      if (t && link) { link.textContent = u.email ? u.email.split('@')[0] : 'Mes Bots'; link.href = '/vps.html'; }
+    })();
+  </script>
+</body>
+</html>

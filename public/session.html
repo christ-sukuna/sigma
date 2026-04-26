@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Session ID — Sigma MDX</title>
+  <meta name="description" content="Generate a SIGMA-MDX session ID for your WhatsApp bot. Scan a QR code and get a ready-to-use session string." />
+  <meta name="theme-color" content="#060912" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Get Session ID — Sigma MDX" />
+  <meta property="og:description" content="Generate a SIGMA-MDX session ID for your WhatsApp bot. Scan a QR code and get a ready-to-use session string." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:url" content="https://sigma-mdx.replit.app/session.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    .page-wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 5rem;
+    }
+    .page-header { margin-bottom: 2.5rem; }
+    .page-header .page-eyebrow {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neon);
+      margin-bottom: .75rem;
+    }
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -.04em;
+      margin-bottom: .5rem;
+    }
+    .page-header p { color: var(--text-muted); }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: .3rem;
+      gap: .25rem;
+      margin-bottom: 2.5rem;
+    }
+    .tab {
+      flex: 1;
+      padding: .65rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: .85rem;
+      color: var(--text-muted);
+      border-radius: 9px;
+      text-align: center;
+      transition: all .2s;
+      user-select: none;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active {
+      background: rgba(0,230,118,0.1);
+      color: var(--neon);
+      border: 1px solid rgba(0,230,118,0.2);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeUp .25s ease; }
+
+    /* Instructions */
+    .instructions {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+    .instructions ol {
+      padding-left: 1.25rem;
+      color: var(--text-muted);
+      font-size: .825rem;
+      line-height: 2;
+    }
+    .instructions ol li strong { color: var(--text); }
+
+    /* Phone row */
+    .phone-row { display: flex; gap: .75rem; }
+    .phone-row input { flex: 1; }
+
+    /* Pairing code display */
+    .code-display {
+      background: rgba(0,230,118,0.04);
+      border: 1px solid rgba(0,230,118,0.15);
+      border-radius: 14px;
+      padding: 2rem;
+      text-align: center;
+      margin: 1.5rem 0;
+      display: none;
+    }
+    .code-display .code {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: .3em;
+      color: var(--neon);
+      font-family: 'Space Grotesk', monospace;
+      text-shadow: 0 0 30px rgba(0,230,118,0.3);
+      margin: .75rem 0;
+    }
+    .code-display .code-hint {
+      font-size: .8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* QR area */
+    .qr-area {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.5rem;
+      text-align: center;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      transition: border-color .3s;
+    }
+    .qr-area.active { border-color: rgba(0,230,118,0.2); }
+    .qr-area img { max-width: 230px; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+    .qr-placeholder {
+      color: var(--text-dim);
+      font-size: .875rem;
+    }
+
+    /* Session result */
+    .session-result {
+      background: rgba(0,230,118,0.05);
+      border: 1px solid rgba(0,230,118,0.2);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      display: none;
+    }
+    .session-result.show { display: block; animation: fadeUp .3s ease; }
+    .session-result-label {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--neon);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: .6rem;
+    }
+    .session-id-box {
+      font-family: monospace;
+      font-size: .78rem;
+      word-break: break-all;
+      color: var(--text);
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: .875rem;
+      line-height: 1.6;
+    }
+    .copy-row { display: flex; gap: .6rem; }
+  </style>
+</head>
+<body class="grid-bg">
+
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.102.546 4.07 1.5 5.78L.057 23.617a.75.75 0 0 0 .934.876l6.141-1.608A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.731 9.731 0 0 1-4.953-1.353l-.354-.213-3.642.955.97-3.546-.232-.365A9.708 9.708 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      </div>
+      <span class="logo-name">Sigma <span>MDX</span></span>
+    </a>
+    <nav id="nav-links">
+      <a href="/" data-i18n="nav.home">Accueil</a>
+      <a href="/builder.html" data-i18n="nav.builder">Créateur</a>
+      <a href="/shared.html" data-i18n="nav.shared">Bot Partagé</a>
+      <a href="/deploy.html" data-i18n="nav.deploy">Guide Déploiement</a>
+      <a href="/vps.html">Mes Bots</a>
+      <a href="/login.html" class="nav-cta" id="nav-auth-link">Connexion</a>
+    </nav>
+    <div class="navbar-end">
+      <button class="lang-btn" id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <div class="page-header">
+      <div class="page-eyebrow" data-i18n="session.eyebrow">Étape 0 — Authentification</div>
+      <h1 data-i18n="session.title">Obtenir le Session ID</h1>
+      <p>Générez votre <code style="background:rgba(255,255,255,.07);padding:.15rem .5rem;border-radius:6px;font-size:.875rem">SIGMA-MDX~</code> session ID pour lier votre numéro WhatsApp au bot.</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('pair')"><span data-i18n="session.tab.pair">📱 Code d'appariement</span> <small style="font-weight:400;opacity:.7">(recommandé)</small></div>
+      <div class="tab" onclick="switchTab('qr')" data-i18n="session.tab.qr">📷 QR Code</div>
+    </div>
+
+    <!-- Pair Code Tab -->
+    <div class="tab-panel active" id="tab-pair">
+      <div class="instructions">
+        <ol>
+          <li data-i18n="session.pair.step1">Entrez votre numéro WhatsApp avec l'indicatif pays</li>
+          <li data-i18n="session.pair.step2">Cliquez sur Obtenir le Code — un code d'appariement apparaîtra</li>
+          <li data-i18n="session.pair.step3">Ouvrez WhatsApp → Paramètres → Appareils liés → Lier un appareil → Lier avec numéro de téléphone</li>
+          <li data-i18n="session.pair.step4">Entrez le code à 8 caractères</li>
+          <li data-i18n="session.pair.step5">Votre Session ID sera envoyé dans votre propre chat WhatsApp</li>
+        </ol>
+      </div>
+
+      <div class="phone-row">
+        <input class="form-input" id="pairNumber" type="tel" placeholder="+32466304227" />
+        <button class="btn btn-primary" id="pairBtn" onclick="getPairCode()" data-i18n="session.pair.btn">Obtenir le Code</button>
+      </div>
+
+      <div id="pair-error" class="alert alert-error" style="margin-top:.875rem"></div>
+
+      <div class="code-display" id="code-display">
+        <div id="pair-status" class="badge badge-waiting pulse" style="margin-bottom:.5rem">⏳ Waiting for connection...</div>
+        <div class="code" id="pair-code">— — — —</div>
+        <div class="code-hint" data-i18n="session.pair.hint">Entrez ce code dans WhatsApp → Paramètres → Appareils liés → Lier avec numéro</div>
+      </div>
+
+      <div class="session-result" id="pair-session-result">
+        <div class="session-result-label" data-i18n="session.result.label">Votre Session ID</div>
+        <div class="session-id-box" id="pair-session-id"></div>
+        <div class="copy-row">
+          <button class="btn btn-primary btn-sm" onclick="copySession('pair-session-id')" data-i18n="session.copy.btn">Copier le Session ID</button>
+          <a href="/builder.html" class="btn btn-ghost btn-sm" data-i18n="session.goto.builder">→ Aller au Créateur</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code Tab -->
+    <div class="tab-panel" id="tab-qr">
+      <div class="instructions">
+        <ol>
+          <li data-i18n="session.qr.step1">Cliquez sur Générer le QR Code</li>
+          <li data-i18n="session.qr.step2">Scannez-le avec WhatsApp → Appareils liés → Lier un appareil</li>
+          <li data-i18n="session.qr.step3">Votre Session ID apparaîtra ici et sera envoyé sur votre WhatsApp</li>
+        </ol>
+      </div>
+
+      <button class="btn btn-primary" id="qrBtn" onclick="startQR()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M14 21h7M21 14v7"/></svg>
+        <span data-i18n="session.qr.btn">Générer le QR Code</span>
+      </button>
+
+      <div id="qr-section" style="margin-top:1.75rem;display:none">
+        <div id="qr-badge" class="badge badge-waiting pulse" style="margin-bottom:1rem">⏳ Generating QR...</div>
+        <div class="qr-area" id="qr-box">
+          <div class="qr-placeholder pulse">Generating QR code...</div>
+        </div>
+      </div>
+
+      <div class="session-result" id="qr-session-result">
+        <div class="session-result-label" data-i18n="session.result.label">Votre Session ID</div>
+        <div class="session-id-box" id="qr-session-id"></div>
+        <div class="copy-row">
+          <button class="btn btn-primary btn-sm" onclick="copySession('qr-session-id')" data-i18n="session.copy.btn">Copier le Session ID</button>
+          <a href="/builder.html" class="btn btn-ghost btn-sm" data-i18n="session.goto.builder">→ Aller au Créateur</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/i18n.js"></script>
+  <script>
+    let qrEventSource = null;
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab, .tab-panel').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.tab[onclick="switchTab('${name}')"]`).classList.add('active');
+      document.getElementById(`tab-${name}`).classList.add('active');
+    }
+
+    async function getPairCode() {
+      const number = document.getElementById('pairNumber').value.trim();
+      if (!/^\+?[0-9]{7,15}$/.test(number)) {
+        showPairError('Enter a valid phone number with country code.');
+        return;
+      }
+
+      const btn = document.getElementById('pairBtn');
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      hidePairError();
+
+      try {
+        const res = await fetch(`/api/session/pair?number=${encodeURIComponent(number)}`);
+        const data = await res.json();
+        if (!res.ok) {
+          showPairError(data.error || 'Failed.');
+          btn.disabled = false;
+          btn.textContent = 'Get Code';
+          return;
+        }
+
+        document.getElementById('pair-code').textContent = data.code;
+        document.getElementById('code-display').style.display = 'block';
+        btn.textContent = 'Code Sent!';
+
+        const status = document.getElementById('pair-status');
+        status.textContent = '✅ Code ready — enter it in WhatsApp';
+        status.className = 'badge badge-ok';
+
+        showPairHint();
+      } catch {
+        showPairError('Network error. Try again.');
+        btn.disabled = false;
+        btn.textContent = 'Get Code';
+      }
+    }
+
+    function showPairHint() {
+      const result = document.getElementById('pair-session-result');
+      result.classList.add('show');
+      document.getElementById('pair-session-id').textContent = '↑ After connecting, your Session ID will be sent to your own WhatsApp chat. Copy it and paste it in the builder.';
+    }
+
+    function showPairError(msg) {
+      const el = document.getElementById('pair-error');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+    function hidePairError() {
+      document.getElementById('pair-error').classList.remove('show');
+    }
+
+    function startQR() {
+      if (qrEventSource) { qrEventSource.close(); qrEventSource = null; }
+
+      document.getElementById('qrBtn').disabled = true;
+      document.getElementById('qr-section').style.display = 'block';
+      document.getElementById('qr-session-result').classList.remove('show');
+      document.getElementById('qr-box').classList.add('active');
+
+      qrEventSource = new EventSource('/api/session/qr');
+
+      qrEventSource.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+
+        if (data.type === 'qr') {
+          document.getElementById('qr-box').innerHTML = `<img src="${data.qr}" alt="QR Code" />`;
+          setQRBadge('waiting', '📷 Scan the QR code with WhatsApp');
+        }
+
+        if (data.type === 'status' && data.status === 'connected') {
+          setQRBadge('ok', '✅ Connected! Extracting session...');
+        }
+
+        if (data.type === 'session') {
+          setQRBadge('ok', '✅ Session ready!');
+          document.getElementById('qr-session-id').textContent = data.sessionId;
+          document.getElementById('qr-session-result').classList.add('show');
+          document.getElementById('qr-box').innerHTML = `<div style="font-size:3rem;margin-bottom:.5rem">✅</div><div style="color:var(--neon);font-weight:600;font-size:.9rem">Connected successfully!</div>`;
+          qrEventSource.close();
+          document.getElementById('qrBtn').disabled = false;
+          document.getElementById('qrBtn').textContent = 'Generate New QR';
+          sessionStorage.setItem('sigmaSessionId', data.sessionId);
+          localStorage.setItem('sigma_last_session', data.sessionId);
+        }
+
+        if (data.type === 'error') {
+          setQRBadge('error', '❌ ' + data.message);
+          document.getElementById('qrBtn').disabled = false;
+          qrEventSource.close();
+        }
+      };
+
+      qrEventSource.onerror = () => {
+        setQRBadge('error', '❌ Connection lost');
+        document.getElementById('qrBtn').disabled = false;
+      };
+    }
+
+    function setQRBadge(type, text) {
+      const badge = document.getElementById('qr-badge');
+      badge.className = `badge badge-${type === 'waiting' ? 'waiting pulse' : type === 'ok' ? 'ok' : 'error'}`;
+      badge.textContent = text;
+    }
+
+    function copySession(id) {
+      const text = document.getElementById(id).textContent;
+      if (!text.startsWith('SIGMA-MDX~') && !text.includes('~')) return;
+      const btn = document.querySelector(`[onclick="copySession('${id}')"]`);
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.style.opacity = '.7';
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.style.opacity = '';
+        }, 2000);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      });
+    }
+
+    window.addEventListener('load', () => {
+      const sid = sessionStorage.getItem('sigmaSessionId');
+      if (sid) document.getElementById('qr-session-id').textContent = sid;
+    });
+
+    (function() {
+      const t = localStorage.getItem('sigma_token');
+      const u = JSON.parse(localStorage.getItem('sigma_user') || '{}');
+      const link = document.getElementById('nav-auth-link');
+      if (t && link) { link.textContent = u.email ? u.email.split('@')[0] : 'Mes Bots'; link.href = '/vps.html'; }
+    })();
+  </script>
+</body>
+</html>

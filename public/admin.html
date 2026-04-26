@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Sigma MDX</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    .page-wrap { max-width: 900px; margin: 0 auto; padding: 4rem 1.5rem 5rem; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+    .page-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 700; letter-spacing: -.03em; }
+    .page-title span { color: var(--neon); }
+    .login-card { max-width: 400px; margin: 6rem auto; background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem 2rem; text-align: center; }
+    .login-card h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; margin-bottom: .5rem; }
+    .login-card p { color: var(--text-muted); font-size: .875rem; margin-bottom: 1.75rem; }
+    .login-card input { width: 100%; margin-bottom: 1rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: .875rem; margin-bottom: 1.75rem; }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    .mini-stat { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; }
+    .mini-stat-label { font-size: .7rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .35rem; }
+    .mini-stat-value { font-size: 1.5rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+    .mini-stat-value.green { color: var(--neon); }
+    .session-table { width: 100%; border-collapse: collapse; }
+    .session-table th { font-size: .72rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; padding: .6rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .session-table td { padding: .875rem 1rem; border-bottom: 1px solid rgba(255,255,255,.04); font-size: .875rem; vertical-align: middle; }
+    .session-table tr:last-child td { border-bottom: none; }
+    .session-table tr:hover td { background: rgba(255,255,255,.02); }
+    .table-wrap { background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .status-pill { display: inline-flex; align-items: center; gap: .4rem; padding: .25rem .7rem; border-radius: 99px; font-size: .72rem; font-weight: 600; }
+    .status-pill.connected { background: rgba(0,230,118,.1); color: var(--neon); }
+    .status-pill.pending { background: rgba(255,165,0,.1); color: #ffa502; }
+    .status-pill.disconnected { background: rgba(255,71,87,.1); color: #ff4757; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: var(--text-muted); }
+    .kick-btn { background: rgba(255,71,87,.1); border: 1px solid rgba(255,71,87,.25); color: #ff4757; font-size: .75rem; padding: .3rem .7rem; border-radius: 7px; cursor: pointer; transition: all .2s; }
+    .kick-btn:hover { background: rgba(255,71,87,.2); }
+    .empty-state { text-align: center; padding: 3rem; color: var(--text-dim); font-size: .9rem; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon); display: inline-block; box-shadow: 0 0 6px var(--neon); animation: pulse-dot 2s infinite; margin-right: .4rem; }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .section-title { font-size: .8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .875rem; display: flex; align-items: center; gap: .5rem; }
+    #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .75rem 1.25rem; font-size: .85rem; display: none; z-index: 999; }
+    #toast.show { display: block; }
+    .refresh-info { font-size: .75rem; color: var(--text-dim); }
+  </style>
+</head>
+<body class="grid-bg">
+
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.102.546 4.07 1.5 5.78L.057 23.617a.75.75 0 0 0 .934.876l6.141-1.608A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.731 9.731 0 0 1-4.953-1.353l-.354-.213-3.642.955.97-3.546-.232-.365A9.708 9.708 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      </div>
+      <span class="logo-name">Sigma <span>MDX</span></span>
+    </a>
+    <nav id="nav-links">
+      <a href="/">Accueil</a>
+      <a href="/shared.html">Bot Partagé</a>
+      <a href="/status.html">Statut</a>
+    </nav>
+    <div class="navbar-end">
+      <button class="nav-toggle" id="nav-toggle" onclick="toggleNav()"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <!-- Login screen -->
+  <div id="login-screen">
+    <div class="login-card">
+      <div style="font-size:2.5rem;margin-bottom:1rem">🔐</div>
+      <h2>Tableau de bord Admin</h2>
+      <p>Entrez votre clé d'administration pour accéder au tableau de bord.</p>
+      <input class="form-input" id="admin-key-input" type="password" placeholder="Clé admin..." />
+      <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Se connecter</button>
+      <div id="login-error" class="alert alert-error" style="margin-top:.875rem;display:none"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none">
+    <div class="page-wrap">
+      <div class="page-header">
+        <div>
+          <div class="page-title">⚙️ Admin <span>Sigma MDX</span></div>
+          <div class="refresh-info"><span class="live-dot"></span>Temps réel · <span id="last-upd">—</span></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="doLogout()">🚪 Déconnexion</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="mini-stat">
+          <div class="mini-stat-label">Connectés</div>
+          <div class="mini-stat-value green" id="adm-connected">—</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">En attente</div>
+          <div class="mini-stat-value" id="adm-pending">—</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">Déconnectés</div>
+          <div class="mini-stat-value" id="adm-disc">—</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">Total / Max</div>
+          <div class="mini-stat-value" id="adm-total">—</div>
+        </div>
+      </div>
+
+      <div class="section-title"><span class="live-dot"></span> Sessions actives</div>
+      <div class="table-wrap">
+        <table class="session-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Numéro</th>
+              <th>Statut</th>
+              <th>Créée</th>
+              <th>Activité</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="sessions-tbody">
+            <tr><td colspan="6" class="empty-state">Chargement...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    function toggleNav() { document.getElementById('nav-links').classList.toggle('open'); }
+
+    let adminKey = sessionStorage.getItem('sigma_admin_key') || '';
+    let evtSource = null;
+
+    // Auto-login if key saved
+    if (adminKey) initDashboard();
+
+    async function doLogin() {
+      const key = document.getElementById('admin-key-input').value.trim();
+      if (!key) return;
+      const r = await fetch('/api/admin/verify', { headers: { 'x-admin-key': key } });
+      if (r.ok) {
+        adminKey = key;
+        sessionStorage.setItem('sigma_admin_key', key);
+        initDashboard();
+      } else {
+        const err = document.getElementById('login-error');
+        err.textContent = '❌ Clé incorrecte.';
+        err.style.display = 'block';
+      }
+    }
+
+    function doLogout() {
+      sessionStorage.removeItem('sigma_admin_key');
+      adminKey = '';
+      if (evtSource) evtSource.close();
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'block';
+    }
+
+    function initDashboard() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadStatus();
+      startSSE();
+    }
+
+    async function loadStatus() {
+      const r = await fetch('/api/admin/status');
+      const d = await r.json();
+      document.getElementById('adm-connected').textContent = d.sessions.connected;
+      document.getElementById('adm-pending').textContent = d.sessions.pending;
+      document.getElementById('adm-disc').textContent = d.sessions.disconnected;
+      document.getElementById('adm-total').textContent = `${d.sessions.total} / ${d.sessions.max}`;
+    }
+
+    function startSSE() {
+      if (evtSource) evtSource.close();
+      evtSource = new EventSource(`/api/admin/events?key=${encodeURIComponent(adminKey)}`);
+      evtSource.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        if (data.type === 'init') renderTable(data.sessions);
+        if (data.type === 'session_created') addOrUpdateRow(data.session);
+        if (data.type === 'session_update') addOrUpdateRow(data.session);
+        if (data.type === 'session_deleted') removeRow(data.id);
+        document.getElementById('last-upd').textContent = new Date().toLocaleTimeString('fr-FR');
+        loadStatus();
+      };
+      evtSource.onerror = () => {
+        setTimeout(startSSE, 5000);
+      };
+    }
+
+    function renderTable(sessions) {
+      const tbody = document.getElementById('sessions-tbody');
+      if (!sessions.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Aucune session active.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = sessions.map(rowHTML).join('');
+    }
+
+    function addOrUpdateRow(session) {
+      if (!session) return;
+      const existing = document.getElementById(`row-${session.id}`);
+      if (existing) {
+        existing.outerHTML = rowHTML(session);
+      } else {
+        const tbody = document.getElementById('sessions-tbody');
+        const empty = tbody.querySelector('.empty-state');
+        if (empty) tbody.innerHTML = '';
+        tbody.insertAdjacentHTML('beforeend', rowHTML(session));
+      }
+    }
+
+    function removeRow(id) {
+      const row = document.getElementById(`row-${id}`);
+      if (row) row.remove();
+      const tbody = document.getElementById('sessions-tbody');
+      if (!tbody.querySelector('tr:not(.empty-state)') || !tbody.children.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Aucune session active.</td></tr>`;
+      }
+    }
+
+    function rowHTML(s) {
+      const shortId = s.id.slice(0, 8) + '...';
+      const statusClass = s.status === 'connected' ? 'connected' : s.status === 'pending' ? 'pending' : 'disconnected';
+      const statusLabel = s.status === 'connected' ? '✅ Connecté' : s.status === 'pending' ? '⏳ En attente' : '❌ Déconnecté';
+      const created = new Date(s.createdAt).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      const activity = new Date(s.lastActivity).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      return `<tr id="row-${s.id}">
+        <td><span class="mono">${shortId}</span></td>
+        <td>${s.phoneNumber || '—'}</td>
+        <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+        <td style="font-size:.8rem;color:var(--text-dim)">${created}</td>
+        <td style="font-size:.8rem;color:var(--text-dim)">${activity}</td>
+        <td><button class="kick-btn" onclick="kickSession('${s.id}')">🗑️ Déconnecter</button></td>
+      </tr>`;
+    }
+
+    async function kickSession(id) {
+      if (!confirm('Déconnecter cette session ?')) return;
+      await fetch(`/api/admin/sessions/${id}`, { method: 'DELETE', headers: { 'x-admin-key': adminKey } });
+      showToast('✅ Session déconnectée');
+      removeRow(id);
+      loadStatus();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    document.getElementById('admin-key-input')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bot Builder — Sigma MDX</title>
+  <meta name="description" content="Configure and generate your personalized WhatsApp bot. Pick a name, prefix, commands and get the full source code in seconds." />
+  <meta name="theme-color" content="#060912" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Bot Builder — Sigma MDX" />
+  <meta property="og:description" content="Configure and generate your personalized WhatsApp bot. Pick a name, prefix, commands and get the full source code in seconds." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:url" content="https://sigma-mdx.replit.app/builder.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/builder.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.102.546 4.07 1.5 5.78L.057 23.617a.75.75 0 0 0 .934.876l6.141-1.608A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.731 9.731 0 0 1-4.953-1.353l-.354-.213-3.642.955.97-3.546-.232-.365A9.708 9.708 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      </div>
+      <span class="logo-name">Sigma <span>MDX</span></span>
+    </a>
+    <nav id="nav-links">
+      <a href="/" data-i18n="nav.home">Accueil</a>
+      <a href="/session.html" data-i18n="nav.session">Obtenir Session</a>
+      <a href="/shared.html" data-i18n="nav.shared">Bot Partagé</a>
+      <a href="/deploy.html" data-i18n="nav.deploy">Guide Déploiement</a>
+      <a href="/status.html">Statut VPS</a>
+      <a href="/vps.html">Mes Bots</a>
+    </nav>
+    <div class="navbar-end">
+      <button class="lang-btn" id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="builder-progress">
+    <div class="builder-progress-fill" id="progress-fill" style="width:25%"></div>
+  </div>
+
+  <div class="builder-layout">
+    <!-- Sidebar -->
+    <aside class="steps-sidebar">
+      <div class="sidebar-label" data-i18n="builder.sidebar.progress">Progression</div>
+      <div class="step-item active" data-step="1">
+        <div class="step-num"><span class="step-num-text">1</span></div>
+        <span data-i18n="builder.step1.nav">Identité du Bot</span>
+      </div>
+      <div class="step-item" data-step="2">
+        <div class="step-num"><span class="step-num-text">2</span></div>
+        <span data-i18n="builder.step2.nav">Fonctions Auto</span>
+      </div>
+      <div class="step-item" data-step="3">
+        <div class="step-num"><span class="step-num-text">3</span></div>
+        <span data-i18n="builder.step3.nav">Sécurité</span>
+      </div>
+      <div class="step-item" data-step="4">
+        <div class="step-num"><span class="step-num-text">4</span></div>
+        <span data-i18n="builder.step4.nav">Livraison</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div style="padding:.75rem;background:rgba(0,230,118,.04);border:1px solid rgba(0,230,118,.1);border-radius:10px;margin-top:.5rem">
+        <div style="font-size:.72rem;color:var(--neon);font-weight:700;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em" data-i18n="builder.session.hint.title">Besoin d'une session ?</div>
+        <p style="font-size:.75rem;color:var(--text-muted);margin-bottom:.6rem;line-height:1.5" data-i18n="builder.session.hint.body">Liez votre numéro WhatsApp pour obtenir un Session ID.</p>
+        <a href="/session.html" class="btn btn-sm" style="background:rgba(0,230,118,.1);color:var(--neon);border:1px solid rgba(0,230,118,.2);font-size:.72rem;padding:.35rem .75rem" data-i18n="builder.session.hint.btn">Obtenir un Session ID →</a>
+      </div>
+    </aside>
+
+    <div class="builder-main">
+      <div id="alert" class="alert"></div>
+
+      <!-- Step 1: Identity -->
+      <div class="step-panel active" id="step-1">
+        <div class="step-header">
+          <div class="step-tag" data-i18n="builder.step1.tag">Étape 1 sur 4</div>
+          <h1 data-i18n="builder.step1.title">Identité du Bot</h1>
+          <p data-i18n="builder.step1.sub">Configurez les paramètres de base de votre bot SIGMA-MDX.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" id="fg-botName">
+            <label class="form-label" for="botName"><span data-i18n="builder.label.botname">Nom du Bot</span> <span class="req">*</span></label>
+            <input class="form-input" id="botName" type="text" placeholder="SIGMA MDX" maxlength="40" value="SIGMA MDX" />
+            <div class="form-error" id="err-botName" data-i18n="builder.err.botname">Requis, 2–40 caractères.</div>
+          </div>
+          <div class="form-group" id="fg-prefix">
+            <label class="form-label" for="prefix"><span data-i18n="builder.label.prefix">Préfixe de Commande</span> <span class="req">*</span></label>
+            <input class="form-input" id="prefix" type="text" placeholder="." maxlength="5" value="." />
+            <div class="form-hint" data-i18n="builder.hint.prefix">Par défaut . — ex: .menu .ping</div>
+            <div class="form-error" id="err-prefix" data-i18n="builder.err.prefix">Requis, 1–5 caractères.</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" id="fg-ownerName">
+            <label class="form-label" for="ownerName"><span data-i18n="builder.label.ownername">Nom du Propriétaire</span> <span class="req">*</span></label>
+            <input class="form-input" id="ownerName" type="text" placeholder="Muzan Sigma" />
+            <div class="form-error" id="err-ownerName" data-i18n="builder.err.required">Requis.</div>
+          </div>
+          <div class="form-group" id="fg-ownerNumber">
+            <label class="form-label" for="ownerNumber"><span data-i18n="builder.label.ownernum">Numéro du Propriétaire</span> <span class="req">*</span></label>
+            <input class="form-input" id="ownerNumber" type="tel" placeholder="+32466304227" />
+            <div class="form-hint" data-i18n="builder.hint.ownernum">Avec indicatif pays, sans espaces.</div>
+            <div class="form-error" id="err-ownerNumber" data-i18n="builder.err.phone">Entrez un numéro de téléphone valide.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="description" data-i18n="builder.label.desc">Description</label>
+          <input class="form-input" id="description" type="text" placeholder="Powered by Muzan Sigma" maxlength="200" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="stickerName" data-i18n="builder.label.sticker">Nom du Pack Sticker</label>
+          <input class="form-input" id="stickerName" type="text" placeholder="SIGMA MDX" maxlength="50" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="sessionId" data-i18n="builder.label.session">Session ID</label>
+          <div class="session-input-row">
+            <input class="form-input" id="sessionId" type="text" placeholder="SIGMA-MDX~xxxxxxxxxxxxxxxx" />
+            <button class="btn btn-ghost btn-sm session-get-btn" type="button" onclick="openSessionPage()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              <span data-i18n="builder.btn.getsession">Obtenir Session</span>
+            </button>
+            <button class="btn btn-ghost btn-sm session-get-btn" type="button" id="sessionFillBtn" onclick="fillSessionFromStorage()" title="Auto-fill from last generated session">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.79"/></svg>
+              <span data-i18n="builder.btn.autofill">Remplissage Auto</span>
+            </button>
+          </div>
+          <div class="form-hint" data-i18n="builder.hint.session">Format: SIGMA-MDX~... — Ouvrez "Obtenir Session" dans un nouvel onglet, puis cliquez sur Remplissage Auto.</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="mode" data-i18n="builder.label.mode">Mode du Bot</label>
+            <select class="form-select" id="mode">
+              <option value="public" data-i18n="builder.mode.public">Public — tout le monde peut l'utiliser</option>
+              <option value="private" data-i18n="builder.mode.private">Privé — propriétaire uniquement</option>
+              <option value="inbox" data-i18n="builder.mode.inbox">Boîte de réception — chats privés uniquement</option>
+              <option value="group" data-i18n="builder.mode.group">Groupe — groupes uniquement</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="antiDelPath" data-i18n="builder.label.antidel">Destination Anti-Suppression</label>
+            <select class="form-select" id="antiDelPath">
+              <option value="same" data-i18n="builder.antidel.same">Même chat</option>
+              <option value="owner" data-i18n="builder.antidel.owner">Envoyer au propriétaire</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="aliveImg" data-i18n="builder.label.aliveimg">URL Image Alive</label>
+            <input class="form-input" id="aliveImg" type="url" placeholder="https://files.catbox.moe/..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="menuImg" data-i18n="builder.label.menuimg">URL Image Menu</label>
+            <input class="form-input" id="menuImg" type="url" placeholder="https://files.catbox.moe/..." />
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <div></div>
+          <button class="btn btn-primary" onclick="goStep(2)">
+            <span data-i18n="builder.btn.next">Étape Suivante</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Auto Features -->
+      <div class="step-panel" id="step-2">
+        <div class="step-header">
+          <div class="step-tag" data-i18n="builder.step2.tag">Étape 2 sur 4</div>
+          <h1 data-i18n="builder.step2.title">Fonctions Automatiques</h1>
+          <p data-i18n="builder.step2.sub">Activez des comportements automatiques pour votre bot. Cliquez pour activer ou désactiver chaque fonction.</p>
+        </div>
+
+        <div class="feature-grid">
+          <label class="feature-check" data-key="autoStatusSeen">
+            <span class="feature-emoji">👁️</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autostatusseen">Voir Statuts Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autostatusseen.desc">Voir tous les statuts automatiquement</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoStatusReact">
+            <span class="feature-emoji">❤️</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autostatusreact">Réaction Statuts Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autostatusreact.desc">Réagir aux statuts automatiquement</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoStatusReply">
+            <span class="feature-emoji">💬</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autostatusreply">Réponse Statuts Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autostatusreply.desc">Répondre aux statuts automatiquement</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoReact">
+            <span class="feature-emoji">🎉</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autoreact">Réaction Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autoreact.desc">Réagir aux messages automatiquement</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoSticker">
+            <span class="feature-emoji">🎭</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autosticker">Sticker Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autosticker.desc">Convertir les images en stickers</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoReply">
+            <span class="feature-emoji">🤖</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autoreply">Réponse Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autoreply.desc">Réponse texte automatique</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoVoice">
+            <span class="feature-emoji">🔊</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autovoice">Vocal Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autovoice.desc">Envoyer des messages vocaux automatiquement</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoTyping">
+            <span class="feature-emoji">✍️</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autotyping">Frappe Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autotyping.desc">Afficher l'indicateur de frappe</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="autoRecording">
+            <span class="feature-emoji">🎙️</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.autorecording">Enregistrement Auto</div>
+              <div class="feature-desc" data-i18n="builder.feat.autorecording.desc">Afficher l'indicateur d'enregistrement</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="readMessage">
+            <span class="feature-emoji">✅</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.readmessage">Lire Messages</div>
+              <div class="feature-desc" data-i18n="builder.feat.readmessage.desc">Marquer comme lu automatiquement</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="readCmd">
+            <span class="feature-emoji">📖</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.readcmd">Lire Commandes</div>
+              <div class="feature-desc" data-i18n="builder.feat.readcmd.desc">Marquer les commandes comme lues</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check checked" data-key="welcomeEnabled">
+            <span class="feature-emoji">👋</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.welcome">Accueillir Membres</div>
+              <div class="feature-desc" data-i18n="builder.feat.welcome.desc">Saluer les nouveaux membres du groupe</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="alwaysOnline">
+            <span class="feature-emoji">🟢</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.feat.alwaysonline">Toujours En Ligne</div>
+              <div class="feature-desc" data-i18n="builder.feat.alwaysonline.desc">Apparaître toujours en ligne</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+        </div>
+
+        <div class="form-group mt-4">
+          <label class="form-label" for="autoStatusMsg" data-i18n="builder.label.statusmsg">Message de Réponse Statut Auto</label>
+          <input class="form-input" id="autoStatusMsg" type="text" placeholder="*SEEN YOUR STATUS BY SIGMA-MDX*" />
+          <div class="form-hint" data-i18n="builder.hint.statusmsg">Envoyé quand la Réponse Statuts Auto est activée.</div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" onclick="goStep(1)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="builder.btn.back">Retour</span>
+          </button>
+          <button class="btn btn-primary" onclick="goStep(3)">
+            <span data-i18n="builder.btn.next">Étape Suivante</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Security -->
+      <div class="step-panel" id="step-3">
+        <div class="step-header">
+          <div class="step-tag" data-i18n="builder.step3.tag">Étape 3 sur 4</div>
+          <h1 data-i18n="builder.step3.title">Anti &amp; Sécurité</h1>
+          <p data-i18n="builder.step3.sub">Fonctions de protection pour garder vos groupes sûrs.</p>
+        </div>
+
+        <div class="feature-grid">
+          <label class="feature-check checked" data-key="antiLink">
+            <span class="feature-emoji">🔗</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.sec.antilink">Anti Lien</div>
+              <div class="feature-desc" data-i18n="builder.sec.antilink.desc">Supprimer les liens dans les groupes</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="antiBad">
+            <span class="feature-emoji">🤬</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.sec.antibad">Anti Grossièretés</div>
+              <div class="feature-desc" data-i18n="builder.sec.antibad.desc">Filtrer les mots offensants</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check checked" data-key="antiVV">
+            <span class="feature-emoji">👁️‍🗨️</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.sec.antivv">Anti Voir Une Fois</div>
+              <div class="feature-desc" data-i18n="builder.sec.antivv.desc">Resauvegarder les médias éphémères</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="deleteLinks">
+            <span class="feature-emoji">🗑️</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.sec.deletelinks">Supprimer Liens</div>
+              <div class="feature-desc" data-i18n="builder.sec.deletelinks.desc">Supprimer liens + exclure l'envoyeur</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+          <label class="feature-check" data-key="customReact">
+            <span class="feature-emoji">😎</span>
+            <div class="feature-info">
+              <div class="feature-name" data-i18n="builder.sec.customreact">Réaction Personnalisée</div>
+              <div class="feature-desc" data-i18n="builder.sec.customreact.desc">Utiliser des réactions emoji personnalisées</div>
+            </div>
+            <div class="feature-toggle"></div>
+          </label>
+        </div>
+
+        <div class="form-group mt-4" id="customEmojiGroup">
+          <label class="form-label" for="customReactEmojis" data-i18n="builder.label.customemoji">Emojis de Réaction Personnalisés</label>
+          <input class="form-input" id="customReactEmojis" type="text" placeholder="💝,💖,❤️,🧡,💛,💚,💙,💜" value="💝,💖,❤️,🧡,💛,💚,💙,💜" />
+          <div class="form-hint" data-i18n="builder.hint.customemoji">Emojis séparés par des virgules pour des réactions aléatoires.</div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" onclick="goStep(2)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="builder.btn.back">Retour</span>
+          </button>
+          <button class="btn btn-primary" onclick="goStep(4)">
+            <span data-i18n="builder.btn.next">Étape Suivante</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 4: Delivery -->
+      <div class="step-panel" id="step-4">
+        <div class="step-header">
+          <div class="step-tag" data-i18n="builder.step4.tag">Étape 4 sur 4</div>
+          <h1 data-i18n="builder.step4.title">Livraison</h1>
+          <p data-i18n="builder.step4.sub">Choisissez comment recevoir votre bot configuré.</p>
+        </div>
+
+        <div class="delivery-options">
+          <label class="delivery-option selected" data-delivery="zip">
+            <div class="delivery-radio"></div>
+            <input type="radio" name="delivery" value="zip" checked />
+            <div class="delivery-icon-wrap">📦</div>
+            <div>
+              <div class="delivery-title" data-i18n="builder.del.zip.title">Télécharger en ZIP</div>
+              <div class="delivery-desc">Full SIGMA-MDX source with your <code style="background:rgba(255,255,255,.07);padding:.1rem .3rem;border-radius:4px;font-size:.75rem">config.env</code> baked in. Run with <code style="background:rgba(255,255,255,.07);padding:.1rem .3rem;border-radius:4px;font-size:.75rem">npm start</code>.</div>
+            </div>
+          </label>
+
+          <label class="delivery-option" data-delivery="github">
+            <div class="delivery-radio"></div>
+            <input type="radio" name="delivery" value="github" />
+            <div class="delivery-icon-wrap">🐙</div>
+            <div style="flex:1">
+              <div class="delivery-title" data-i18n="builder.del.github.title">Pousser sur GitHub</div>
+              <div class="delivery-desc" data-i18n="builder.del.github.desc">Autorisez GitHub et envoyez le code généré directement dans votre dépôt en un clic.</div>
+              <div class="delivery-extra">
+                <div id="github-connect-area">
+                  <button class="github-btn" id="githubConnectBtn" type="button">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    <span data-i18n="builder.btn.github">Connecter GitHub</span>
+                  </button>
+                </div>
+                <div id="github-connected-area" style="display:none">
+                  <div class="github-connected">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span data-i18n="builder.github.connected">GitHub Connecté</span>
+                  </div>
+                  <div class="form-group mt-2">
+                    <label class="form-label" for="repoName" data-i18n="builder.label.reponame">Nom du dépôt</label>
+                    <input class="form-input" id="repoName" type="text" placeholder="sigma-mdx-bot" />
+                  </div>
+                  <label style="display:flex;align-items:center;gap:.5rem;margin-top:.75rem;font-size:.825rem;cursor:pointer;color:var(--text-muted)">
+                    <input type="checkbox" id="createNew" checked style="accent-color:var(--neon)" />
+                    <span data-i18n="builder.github.createnew">Créer un nouveau dépôt</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <label class="delivery-option" data-delivery="platform">
+            <div class="delivery-radio"></div>
+            <input type="radio" name="delivery" value="platform" />
+            <div class="delivery-icon-wrap">🚀</div>
+            <div style="flex:1">
+              <div class="delivery-title" data-i18n="builder.del.platform.title">Déployer sur une Plateforme Cloud</div>
+              <div class="delivery-desc" data-i18n="builder.del.platform.desc">Générez votre bot, puis obtenez un guide étape par étape pour le déployer sur Railway, Render, Koyeb ou Heroku.</div>
+              <div class="delivery-extra">
+                <div class="platform-grid">
+                  <label class="platform-card selected" data-platform="railway">
+                    <input type="radio" name="platform" value="railway" checked />
+                    <div class="platform-logo">
+                      <svg width="22" height="22" viewBox="0 0 100 100" fill="currentColor"><path d="M5.33 61.32A50 50 0 0 1 49.98 0c20.18 0 37.64 11.95 46.08 29.36L26.3 49.97zM94.67 40.78 73.7 50.03l-69.76 0A50 50 0 0 0 50.02 100c20.18 0 37.64-11.95 46.08-29.36l-1.43-29.86z"/></svg>
+                    </div>
+                    <span>Railway</span>
+                  </label>
+                  <label class="platform-card" data-platform="render">
+                    <input type="radio" name="platform" value="render" />
+                    <div class="platform-logo" style="color:#46E3B7">
+                      <svg width="20" height="20" viewBox="0 0 100 100" fill="currentColor"><rect x="10" y="10" width="35" height="80" rx="8"/><rect x="55" y="10" width="35" height="35" rx="8"/></svg>
+                    </div>
+                    <span>Render</span>
+                  </label>
+                  <label class="platform-card" data-platform="koyeb">
+                    <input type="radio" name="platform" value="koyeb" />
+                    <div class="platform-logo" style="color:#a78bfa">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 19h20L12 2zm0 4l7 13H5l7-13z"/></svg>
+                    </div>
+                    <span>Koyeb</span>
+                  </label>
+                  <label class="platform-card" data-platform="heroku">
+                    <input type="radio" name="platform" value="heroku" />
+                    <div class="platform-logo" style="color:#79589f">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 0H4a4 4 0 0 0-4 4v16a4 4 0 0 0 4 4h16a4 4 0 0 0 4-4V4a4 4 0 0 0-4-4zm-5 17H9l3.56-3.56A6.23 6.23 0 0 1 9 7h2a4.22 4.22 0 0 0 3 1.28A4.22 4.22 0 0 0 17 7h2a6.23 6.23 0 0 1-3.56 6.44zm2-10h-2V5h2z"/></svg>
+                    </div>
+                    <span>Heroku</span>
+                  </label>
+                </div>
+                <p style="font-size:.78rem;color:var(--text-muted);margin-top:.875rem;line-height:1.5" data-i18n="builder.del.platform.guide">Votre bot sera téléchargé en ZIP. Un guide de déploiement détaillé s'ouvrira pour la plateforme sélectionnée.</p>
+              </div>
+            </div>
+          </label>
+
+          <label class="delivery-option" data-delivery="vps">
+            <div class="delivery-radio"></div>
+            <input type="radio" name="delivery" value="vps" />
+            <div class="delivery-icon-wrap">🖥️</div>
+            <div style="flex:1">
+              <div class="delivery-title">Déployer sur VPS — 24h/24 🆓</div>
+              <div class="delivery-desc">Votre bot personnalisé tourne en permanence sur notre serveur. Scannez le code, c'est parti — aucun hébergement à gérer.</div>
+              <div class="delivery-extra">
+                <div class="form-group">
+                  <label class="form-label">Votre numéro WhatsApp <span style="color:#ff4757">*</span></label>
+                  <input class="form-input" id="vpsPhone" type="tel" placeholder="+32466304227" />
+                  <div class="form-hint">Avec indicatif pays — ce numéro sera lié au bot.</div>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <label class="delivery-option" data-delivery="shared">
+            <div class="delivery-radio"></div>
+            <input type="radio" name="delivery" value="shared" />
+            <div class="delivery-icon-wrap">⚡</div>
+            <div style="flex:1">
+              <div class="delivery-title" data-i18n="builder.del.shared.title">Utiliser le Bot Partagé Sigma MDX</div>
+              <div class="delivery-desc" data-i18n="builder.del.shared.desc">Ignorez la configuration — scannez un QR et exécutez le bot directement sur notre serveur. Aucun hébergement requis.</div>
+              <div class="delivery-extra">
+                <div class="form-group">
+                  <label class="form-label" for="sharedPhone" data-i18n="builder.label.phone">Votre Numéro WhatsApp</label>
+                  <input class="form-input" id="sharedPhone" type="tel" placeholder="+32466304227" />
+                </div>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" onclick="goStep(3)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="builder.btn.back">Retour</span>
+          </button>
+          <button class="btn btn-primary btn-lg" id="generateBtn" onclick="handleGenerate()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span data-i18n="builder.btn.generate">Générer le Bot</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div class="modal-overlay" id="previewModal" onclick="closePreviewModal(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <div class="modal-eyebrow" data-i18n="builder.modal.eyebrow">Vérifiez avant de télécharger</div>
+          <h2 class="modal-title" data-i18n="builder.modal.title">Aperçu de la Configuration</h2>
+        </div>
+        <button class="modal-close" onclick="closePreviewModal()" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="env-preview" id="envPreview"></div>
+
+        <div class="preview-features" id="previewFeatures"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closePreviewModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="builder.modal.edit">Modifier la Config</span>
+        </button>
+        <button class="btn btn-primary" id="confirmDownloadBtn" onclick="confirmDownload()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-i18n="builder.modal.confirm">Confirmer &amp; Télécharger</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generation Console Modal -->
+  <div class="modal-overlay" id="consoleModal">
+    <div class="modal-box" style="max-width:600px;width:95%">
+      <div class="modal-header">
+        <div>
+          <div class="modal-eyebrow">Génération en cours</div>
+          <h2 class="modal-title" id="consoleTitle">Construction du bot...</h2>
+        </div>
+        <div id="consoleSpinner" style="display:flex;align-items:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        </div>
+      </div>
+      <div class="modal-body" style="padding:0">
+        <div id="consoleOutput" style="
+          font-family:'Space Mono',monospace,monospace;
+          font-size:.78rem;
+          line-height:1.7;
+          background:#060912;
+          border:1px solid rgba(255,255,255,.07);
+          border-radius:10px;
+          padding:1.1rem 1.25rem;
+          min-height:180px;
+          max-height:320px;
+          overflow-y:auto;
+          color:#a0b0c0;
+          margin:1.5rem 1.5rem 1rem;
+        "></div>
+      </div>
+      <div class="modal-footer" id="consoleFooter" style="display:none">
+        <button class="btn btn-ghost" onclick="closeConsoleModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Fermer
+        </button>
+        <button class="btn btn-primary" id="consoleDlBtn" onclick="triggerConsoleDownload()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Télécharger le ZIP
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/builder.js"></script>
+  <script src="/js/i18n.js"></script>
+</body>
+</html>

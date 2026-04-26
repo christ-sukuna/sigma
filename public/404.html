@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page introuvable · Sigma MDX</title>
+  <meta name="theme-color" content="#060912" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    .not-found-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .nf-code {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(5rem, 20vw, 9rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #00e676, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 1rem;
+      letter-spacing: -.04em;
+    }
+    .nf-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 700;
+      margin-bottom: .75rem;
+    }
+    .nf-sub {
+      color: var(--text-muted);
+      font-size: .97rem;
+      max-width: 400px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+    .nf-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nf-glyph {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      opacity: .7;
+    }
+    .nf-grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,230,118,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,230,118,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="nf-grid-bg"></div>
+
+  <div class="not-found-wrap">
+    <div class="nf-glyph">🤖</div>
+    <div class="nf-code">404</div>
+    <h1 class="nf-title">Page introuvable</h1>
+    <p class="nf-sub">
+      Le bot a cherché partout mais n'a pas trouvé cette page.
+      Elle a peut-être été déplacée ou n'a jamais existé.
+    </p>
+    <div class="nf-actions">
+      <a href="/" class="btn btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l9-9 9 9M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        Accueil
+      </a>
+      <a href="/vps.html" class="btn btn-outline">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Mes Bots
+      </a>
+      <a href="/builder.html" class="btn btn-outline">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Créer un Bot
+      </a>
+    </div>
+  </div>
+</body>
+</html>

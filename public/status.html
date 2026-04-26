@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGMA MDX — Statut VPS</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    .status-hero { text-align: center; padding: 4rem 1rem 2rem; }
+    .status-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: .5rem; }
+    .status-hero p { color: #6b8095; }
+    .server-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .4rem 1rem; border-radius: 50px; font-size: .85rem; font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .server-badge.online { background: rgba(0,230,118,.12); border: 1px solid rgba(0,230,118,.3); color: #00e676; }
+    .server-badge.offline { background: rgba(255,82,82,.12); border: 1px solid rgba(255,82,82,.3); color: #ff5252; }
+    .server-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; max-width: 900px; margin: 0 auto 2rem; padding: 0 1.5rem; }
+    .stat-card { background: #0d1825; border: 1px solid #1a2a3a; border-radius: 12px; padding: 1.5rem; }
+    .stat-icon { font-size: 1.5rem; margin-bottom: .5rem; }
+    .stat-label { color: #6b8095; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .3rem; }
+    .stat-value { font-size: 1.6rem; font-weight: 800; color: #e0eaf5; }
+    .stat-sub { color: #6b8095; font-size: .8rem; margin-top: .2rem; }
+    .progress-bar { height: 6px; background: #1a2a3a; border-radius: 3px; margin-top: .75rem; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+    .progress-fill.green { background: #00e676; }
+    .progress-fill.yellow { background: #ffb300; }
+    .progress-fill.red { background: #ff5252; }
+    .section { max-width: 900px; margin: 0 auto 2rem; padding: 0 1.5rem; }
+    .section-title { font-size: 1rem; font-weight: 700; color: #8a9ab0; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1rem; }
+    .process-table { width: 100%; border-collapse: collapse; }
+    .process-table th { text-align: left; color: #6b8095; font-size: .78rem; text-transform: uppercase; padding: .6rem .8rem; border-bottom: 1px solid #1a2a3a; }
+    .process-table td { padding: .75rem .8rem; border-bottom: 1px solid #0f1f2e; font-size: .9rem; }
+    .process-table tr:last-child td { border-bottom: none; }
+    .status-pill { display: inline-flex; align-items: center; gap: .35rem; padding: .2rem .7rem; border-radius: 50px; font-size: .78rem; font-weight: 600; }
+    .status-pill.online { background: rgba(0,230,118,.12); color: #00e676; }
+    .status-pill.stopped, .status-pill.errored { background: rgba(255,82,82,.12); color: #ff5252; }
+    .status-pill.launching { background: rgba(255,179,0,.12); color: #ffb300; }
+    .table-wrap { background: #0d1825; border: 1px solid #1a2a3a; border-radius: 12px; overflow: hidden; }
+    .empty-state { text-align: center; padding: 3rem; color: #6b8095; }
+    .refresh-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .refresh-btn { display: flex; align-items: center; gap: .4rem; background: #0d1825; border: 1px solid #1a2a3a; color: #8a9ab0; border-radius: 8px; padding: .5rem 1rem; cursor: pointer; font-size: .85rem; transition: all .2s; }
+    .refresh-btn:hover { border-color: #00e676; color: #00e676; }
+    .last-refresh { color: #6b8095; font-size: .78rem; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a href="/" class="navbar-brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span class="brand-name">Sigma <span class="brand-accent">MDX</span></span>
+    </a>
+    <nav id="nav-links">
+      <a href="/">Accueil</a>
+      <a href="/builder.html">Créateur</a>
+      <a href="/vps.html">Mes Bots</a>
+      <a href="/status.html" style="color:#00e676">Statut VPS</a>
+    </nav>
+    <div class="navbar-end">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="document.getElementById('nav-links').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="status-hero">
+      <div id="server-badge" class="server-badge online">
+        <div class="dot"></div>
+        <span id="badge-text">Vérification...</span>
+      </div>
+      <h1>Statut du Serveur</h1>
+      <p>Ressources et processus en temps réel — VPS <span id="vps-host" style="color:#00e676"></span></p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">💾</div>
+        <div class="stat-label">RAM Utilisée</div>
+        <div class="stat-value" id="ram-val">—</div>
+        <div class="stat-sub" id="ram-sub">Chargement...</div>
+        <div class="progress-bar"><div class="progress-fill green" id="ram-bar" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💿</div>
+        <div class="stat-label">Disque</div>
+        <div class="stat-value" id="disk-val">—</div>
+        <div class="stat-sub" id="disk-sub">Chargement...</div>
+        <div class="progress-bar"><div class="progress-fill green" id="disk-bar" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🤖</div>
+        <div class="stat-label">Bots Connectés</div>
+        <div class="stat-value" id="bots-val">—</div>
+        <div class="stat-sub" id="bots-sub">connectés à WhatsApp</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-label">Processus PM2</div>
+        <div class="stat-value" id="pm2-val">—</div>
+        <div class="stat-sub" id="pm2-sub">actifs / total</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="refresh-row">
+        <div class="section-title">Processus PM2</div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <span class="last-refresh" id="last-refresh"></span>
+          <button class="refresh-btn" onclick="loadStatus()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Actualiser
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap" id="process-table-wrap">
+        <div class="empty-state">Chargement...</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function formatBytes(b) {
+      if (!b) return '0 Mo';
+      const mb = b / 1024 / 1024;
+      return mb >= 1024 ? (mb/1024).toFixed(1)+' Go' : Math.round(mb)+' Mo';
+    }
+    function formatUptime(ms) {
+      if (!ms) return '—';
+      const diff = Date.now() - ms;
+      const mins = Math.floor(diff / 60000);
+      if (mins < 60) return `${mins}m`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h ${mins%60}m`;
+      return `${Math.floor(hrs/24)}j ${hrs%24}h`;
+    }
+    function barColor(pct) { return pct>=85?'red':pct>=65?'yellow':'green'; }
+    function pill(st) {
+      const labels = { online:'En ligne', stopped:'Arrêté', errored:'Erreur', launching:'Démarrage' };
+      return `<span class="status-pill ${st}">${labels[st]||st}</span>`;
+    }
+
+    async function loadStatus() {
+      try {
+        const r = await fetch('/api/vps/server-status');
+        const d = await r.json();
+        const badge = document.getElementById('server-badge');
+
+        if (!d.online) {
+          badge.className = 'server-badge offline';
+          document.getElementById('badge-text').textContent = 'VPS hors ligne';
+          document.getElementById('process-table-wrap').innerHTML = `<div class="empty-state">❌ ${d.error||'Connexion impossible.'}</div>`;
+          return;
+        }
+
+        badge.className = 'server-badge online';
+        document.getElementById('badge-text').textContent = 'VPS en ligne';
+        document.getElementById('vps-host').textContent = d.host || '';
+
+        const ramPct = d.ram.pct;
+        document.getElementById('ram-val').textContent = ramPct + '%';
+        document.getElementById('ram-sub').textContent = `${d.ram.used} Mo / ${d.ram.total} Mo`;
+        const rb = document.getElementById('ram-bar');
+        rb.style.width = ramPct+'%'; rb.className = `progress-fill ${barColor(ramPct)}`;
+
+        const diskPct = d.disk.pct;
+        document.getElementById('disk-val').textContent = diskPct + '%';
+        document.getElementById('disk-sub').textContent = `${d.disk.used} Go / ${d.disk.total} Go`;
+        const db = document.getElementById('disk-bar');
+        db.style.width = diskPct+'%'; db.className = `progress-fill ${barColor(diskPct)}`;
+
+        document.getElementById('bots-val').textContent = d.connectedBots;
+        document.getElementById('pm2-val').textContent = `${d.pm2.running}/${d.pm2.total}`;
+        document.getElementById('pm2-sub').textContent = `${d.pm2.running} actif(s), ${d.pm2.stopped} arrêté(s)`;
+
+        const wrap = document.getElementById('process-table-wrap');
+        if (!d.processes.length) {
+          wrap.innerHTML = '<div class="empty-state">Aucun processus PM2 actif pour l\'instant.</div>';
+        } else {
+          wrap.innerHTML = `<table class="process-table">
+            <thead><tr><th>Nom</th><th>Statut</th><th>Uptime</th><th>RAM</th><th>CPU</th><th>Redémarrages</th></tr></thead>
+            <tbody>${d.processes.map(p=>`
+              <tr>
+                <td><strong>${p.name}</strong></td>
+                <td>${pill(p.status)}</td>
+                <td>${formatUptime(p.uptime)}</td>
+                <td>${formatBytes(p.memory)}</td>
+                <td>${p.cpu??0}%</td>
+                <td>${p.restarts??0}</td>
+              </tr>`).join('')}</tbody>
+          </table>`;
+        }
+        document.getElementById('last-refresh').textContent = 'Actualisé à ' + new Date().toLocaleTimeString('fr-FR');
+      } catch {
+        document.getElementById('server-badge').className = 'server-badge offline';
+        document.getElementById('badge-text').textContent = 'Erreur réseau';
+      }
+    }
+
+    let _autoRefreshTimer = null;
+    let _nextRefreshIn = 15;
+
+    function startAutoRefresh() {
+      clearInterval(_autoRefreshTimer);
+      _nextRefreshIn = 15;
+      updateCountdown();
+      _autoRefreshTimer = setInterval(() => {
+        _nextRefreshIn--;
+        updateCountdown();
+        if (_nextRefreshIn <= 0) { loadStatus(); _nextRefreshIn = 15; }
+      }, 1000);
+    }
+
+    function updateCountdown() {
+      const el = document.getElementById('last-refresh');
+      if (el) {
+        const time = new Date().toLocaleTimeString('fr-FR');
+        el.innerHTML = `<span class="ws-live"><span class="dot"></span>LIVE</span> · Actualisé ${time} · prochaine dans ${_nextRefreshIn}s`;
+      }
+    }
+
+    loadStatus();
+    startAutoRefresh();
+  </script>
+</body>
+</html>

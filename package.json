@@ -1,0 +1,31 @@
+{
+  "name": "sigma-mdx",
+  "version": "1.0.0",
+  "description": "WhatsApp Bot Builder Platform by Muzan Sigma",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.1.1",
+    "@whiskeysockets/baileys": "^6.7.18",
+    "archiver": "^7.0.1",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "express-session": "^1.18.0",
+    "gifted-baileys": "^2.5.8",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.4.1",
+    "nodemailer": "^8.0.6",
+    "pino": "^9.3.2",
+    "qrcode": "^1.5.4",
+    "ssh2": "^1.17.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sigma MDX — WhatsApp Bot Builder</title>
+  <meta name="description" content="Build and deploy personalized WhatsApp bots powered by Baileys. 50+ commands, AI, downloaders, group management. No coding required." />
+  <meta name="theme-color" content="#060912" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sigma MDX — WhatsApp Bot Builder" />
+  <meta property="og:description" content="Build your own WhatsApp bot in minutes. 50+ commands, AI chat, media downloaders, full group management. No coding required." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:url" content="https://sigma-mdx.replit.app/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sigma MDX — WhatsApp Bot Builder" />
+  <meta name="twitter:description" content="Build your own WhatsApp bot in minutes. 50+ commands, AI, downloaders, group management." />
+  <meta name="twitter:image" content="/og-image.png" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body class="grid-bg">
+
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.102.546 4.07 1.5 5.78L.057 23.617a.75.75 0 0 0 .934.876l6.141-1.608A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.731 9.731 0 0 1-4.953-1.353l-.354-.213-3.642.955.97-3.546-.232-.365A9.708 9.708 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      </div>
+      <span class="logo-name">Sigma <span>MDX</span></span>
+    </a>
+    <nav id="nav-links">
+      <a href="/builder.html" data-i18n="nav.builder">Créateur</a>
+      <a href="/session.html" data-i18n="nav.session">Obtenir Session</a>
+      <a href="/shared.html" data-i18n="nav.shared">Bot Partagé</a>
+      <a href="/deploy.html" data-i18n="nav.deploy">Guide Déploiement</a>
+      <a href="/status.html">Statut VPS</a>
+      <a href="/vps.html">Mes Bots</a>
+      <a href="/login.html" class="nav-cta" id="nav-auth-link">Connexion</a>
+    </nav>
+    <div class="navbar-end">
+      <button class="lang-btn" id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        <span data-i18n="home.eyebrow">Créateur de Bot WhatsApp</span>
+      </div>
+      <h1 data-i18n-html="home.h1">
+        Créez votre<br><span class="grad">Bot WhatsApp</span><br>en minutes
+      </h1>
+      <p data-i18n="home.subtitle">
+        Personnalisez votre bot, choisissez les fonctionnalités souhaitées, et obtenez le code source complet — en ZIP ou directement sur votre GitHub.
+      </p>
+      <div class="hero-actions">
+        <a href="/builder.html" class="btn btn-primary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          <span data-i18n="home.btn.build">Créer mon Bot</span>
+        </a>
+        <a href="/shared.html" class="btn btn-outline btn-lg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span data-i18n="home.btn.shared">Bot Partagé</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-strip">
+      <div class="stat-item">
+        <span class="stat-num">50+</span>
+        <span class="stat-label" data-i18n="stat.commands">Commandes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">8</span>
+        <span class="stat-label" data-i18n="stat.categories">Catégories</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">100%</span>
+        <span class="stat-label" data-i18n="stat.free">Gratuit</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-i18n="stat.nocode.num">Zéro Code</span>
+        <span class="stat-label" data-i18n="stat.nocode.label">Requis</span>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <section class="features-section">
+      <div style="margin-bottom:2.5rem">
+        <div class="section-label" data-i18n="feat.label">Tout ce dont vous avez besoin</div>
+        <h2 class="section-title" data-i18n="feat.title">Plein de fonctionnalités puissantes</h2>
+        <p class="section-sub" data-i18n="feat.sub">Tout pour créer, personnaliser et déployer votre bot WhatsApp sans écrire une seule ligne de code.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3 data-i18n="feat.1.title">Personnalisation totale</h3>
+          <p data-i18n="feat.1.desc">Définissez le nom, le préfixe, le message d'accueil et activez exactement les fonctions voulues.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3 data-i18n="feat.2.title">Télécharger en ZIP</h3>
+          <p data-i18n="feat.2.desc">Obtenez un projet Node.js prêt à l'emploi avec tous vos paramètres intégrés. Lancez juste npm start.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐙</div>
+          <h3 data-i18n="feat.3.title">Pousser sur GitHub</h3>
+          <p data-i18n="feat.3.desc">Autorisez GitHub et envoyez le code généré directement dans votre dépôt en un clic.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 data-i18n="feat.4.title">Déploiement Partagé</h3>
+          <p data-i18n="feat.4.desc">Pas envie d'héberger ? Scannez juste un QR code et exécutez le bot sur notre serveur.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3 data-i18n="feat.5.title">Basé sur Baileys</h3>
+          <p data-i18n="feat.5.desc">Utilise le dernier protocole WhatsApp Web — aucune API WhatsApp Business requise.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3 data-i18n="feat.6.title">Outils Anti-Spam</h3>
+          <p data-i18n="feat.6.desc">Anti-lien, anti-grossièretés, anti-view-once et réactions pour protéger vos groupes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Commands Showcase -->
+    <section class="section" style="padding-top:0">
+      <div style="margin-bottom:2.5rem">
+        <div class="section-label" data-i18n="cmd.label">Ce que fait votre bot</div>
+        <h2 class="section-title" data-i18n="cmd.title">50+ commandes sur 8 catégories</h2>
+        <p class="section-sub" data-i18n="cmd.sub">De l'IA à la gestion de groupe — tout disponible avec le préfixe de votre choix.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem">
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">🤖</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">AI</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ai</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.chatgpt</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.imagine</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.dalle</code>
+          </div>
+        </div>
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">⬇️</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">Downloader</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ytmp3</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ytmp4</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.tiktok</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.instagram</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.facebook</code>
+          </div>
+        </div>
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">🔍</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">Search</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.google</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.yt</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.weather</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.news</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.lyrics</code>
+          </div>
+        </div>
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">🛠️</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">Tools</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ssweb</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.translate</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.remini</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.qrcode</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.tts</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.removebg</code>
+          </div>
+        </div>
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">🎨</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">Converter</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.sticker</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.toimg</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ebinary</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ebase64</code>
+          </div>
+        </div>
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">👥</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">Group (20+ cmds)</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.tagall</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.kick</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.promote</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.mute</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.link</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ginfo</code>
+          </div>
+        </div>
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">⚡</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">General</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.menu</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.ping</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.alive</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.uptime</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.repo</code>
+          </div>
+        </div>
+
+        <div class="feature-card" style="padding:1.25rem 1.5rem">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+            <span style="font-size:1.3rem">👑</span>
+            <span style="font-weight:700;font-size:.95rem;color:var(--neon)">Owner</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.vv</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.del</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.block</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.join</code>
+            <code style="background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:6px;font-size:.73rem">.mygroups</code>
+          </div>
+        </div>
+
+      </div>
+      <p style="text-align:center;color:var(--text-muted);font-size:.85rem;margin-top:1.5rem" data-i18n="cmd.menu.hint">
+        Envoyez .menu sur WhatsApp pour voir la liste complète avec toutes les aliases.
+      </p>
+    </section>
+
+    <!-- How it works -->
+    <section class="section">
+      <div class="section-label" data-i18n="how.label">Processus simple</div>
+      <h2 class="section-title" data-i18n="how.title">Opérationnel en 3 étapes</h2>
+      <p class="section-sub" data-i18n="how.sub">Trois étapes simples pour votre bot WhatsApp entièrement personnalisé et prêt à déployer.</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <h3 data-i18n="step.1.title">Configurer</h3>
+          <p data-i18n="step.1.desc">Renseignez le nom, le préfixe, les infos propriétaire et choisissez les fonctions automatiques.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <h3 data-i18n="step.2.title">Générer</h3>
+          <p data-i18n="step.2.desc">Nous générons un projet Node.js complet avec tous vos paramètres appliqués et empaqueté.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <h3 data-i18n="step.3.title">Déployer</h3>
+          <p data-i18n="step.3.desc">Téléchargez le ZIP et hébergez-le, poussez sur GitHub pour CI/CD, ou scannez le QR.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="padding-top:0">
+      <div class="cta-banner">
+        <div class="chip" style="margin-bottom:1.5rem" data-i18n="cta.chip">✦ Gratuit & Open Source</div>
+        <h2 data-i18n="cta.title">Prêt à créer votre bot ?</h2>
+        <p data-i18n="cta.sub">Commencez à configurer votre bot WhatsApp personnalisé en quelques minutes — aucun code requis.</p>
+        <div class="hero-actions">
+          <a href="/builder.html" class="btn btn-primary btn-lg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            <span data-i18n="cta.btn.build">Créer maintenant</span>
+          </a>
+          <a href="/session.html" class="btn btn-outline btn-lg" data-i18n="cta.btn.session">Obtenir un Session ID</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand">
+      <span data-i18n="footer.built">Créé par</span>&nbsp;<strong>Muzan Sigma</strong>&nbsp;·&nbsp;Sigma MDX &copy; 2026
+    </div>
+    <div class="footer-links">
+      <a href="/builder.html" data-i18n="nav.builder">Créateur</a>
+      <a href="/session.html" data-i18n="nav.session">Obtenir Session</a>
+      <a href="/shared.html" data-i18n="nav.shared">Bot Partagé</a>
+      <a href="/deploy.html" data-i18n="nav.deploy">Guide Déploiement</a>
+      <a href="https://github.com/muzansigma/sigma-mdx" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div style="width:100%;text-align:center;color:var(--text-dim);font-size:.78rem;margin-top:.25rem" data-i18n="footer.disclaimer">
+      Sigma MDX n'est pas affilié à WhatsApp ou Meta. Utilisez de manière responsable.
+    </div>
+  </footer>
+
+  <script src="/js/i18n.js"></script>
+  <script>
+    (function() {
+      const t = localStorage.getItem('sigma_token');
+      const u = JSON.parse(localStorage.getItem('sigma_user') || '{}');
+      const link = document.getElementById('nav-auth-link');
+      if (t && link) {
+        link.textContent = u.email ? u.email.split('@')[0] : 'Mes Bots';
+        link.href = '/vps.html';
+      }
+    })();
+  </script>
+</body>
+</html>

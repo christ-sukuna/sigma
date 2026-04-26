@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deploy Guide — Sigma MDX</title>
+  <meta name="description" content="Step-by-step guide to deploy your Sigma MDX WhatsApp bot on Render, Railway, or any VPS. Free hosting options included." />
+  <meta name="theme-color" content="#060912" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Deploy Guide — Sigma MDX" />
+  <meta property="og:description" content="Step-by-step guide to deploy your Sigma MDX WhatsApp bot on Render, Railway, or any VPS. Free hosting options included." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:url" content="https://sigma-mdx.replit.app/deploy.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    .deploy-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 6rem;
+    }
+    .deploy-header {
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+    .deploy-eyebrow {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--neon);
+      margin-bottom: .75rem;
+    }
+    .deploy-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      margin-bottom: .6rem;
+    }
+    .deploy-header h1 span { color: var(--neon); }
+    .deploy-header p { color: var(--text-muted); font-size: 1rem; }
+    .bot-name-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(0,230,118,.08);
+      border: 1px solid rgba(0,230,118,.2);
+      color: var(--neon);
+      border-radius: 8px;
+      font-size: .82rem;
+      font-weight: 600;
+      padding: .35rem .875rem;
+      margin-top: .75rem;
+      font-family: monospace;
+    }
+
+    /* Platform tabs */
+    .platform-tabs {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ptab {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .65rem 1.25rem;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: rgba(255,255,255,.03);
+      cursor: pointer;
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all .2s;
+      user-select: none;
+    }
+    .ptab:hover { border-color: rgba(255,255,255,.2); color: var(--text); }
+    .ptab.active {
+      border-color: rgba(0,230,118,.4);
+      background: rgba(0,230,118,.08);
+      color: var(--neon);
+    }
+    .ptab .ptab-icon { font-size: 1.05rem; }
+
+    /* Platform panel */
+    .platform-panel { display: none; }
+    .platform-panel.active { display: block; animation: fadeUp .25s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Panel header */
+    .panel-hero {
+      background: linear-gradient(135deg, rgba(255,255,255,.03) 0%, rgba(0,230,118,.04) 100%);
+      border: 1px solid rgba(0,230,118,.12);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .panel-hero-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .panel-hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: .25rem;
+    }
+    .panel-hero-desc { color: var(--text-muted); font-size: .875rem; line-height: 1.5; }
+    .panel-deploy-btn {
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* Steps */
+    .steps-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .step-card {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: border-color .2s;
+    }
+    .step-card:hover { border-color: rgba(255,255,255,.12); }
+    .step-num-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(0,230,118,.12);
+      border: 1px solid rgba(0,230,118,.25);
+      color: var(--neon);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-content { flex: 1; min-width: 0; }
+    .step-title {
+      font-weight: 700;
+      font-size: .95rem;
+      margin-bottom: .35rem;
+      color: var(--text);
+    }
+    .step-desc {
+      color: var(--text-muted);
+      font-size: .85rem;
+      line-height: 1.6;
+    }
+    .step-desc code {
+      background: rgba(255,255,255,.08);
+      padding: .1rem .4rem;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: .8rem;
+      color: var(--text);
+    }
+    .step-desc a { color: var(--neon); text-decoration: none; }
+    .step-desc a:hover { text-decoration: underline; }
+
+    /* Env vars box */
+    .env-box {
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: .875rem;
+    }
+    .env-box-header {
+      background: rgba(255,255,255,.04);
+      padding: .5rem 1rem;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-dim);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .env-var-row {
+      display: flex;
+      align-items: center;
+      padding: .45rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      font-size: .78rem;
+      gap: .75rem;
+    }
+    .env-var-row:last-child { border-bottom: none; }
+    .ekey { font-family: monospace; color: #a78bfa; min-width: 160px; flex-shrink: 0; }
+    .eval { font-family: monospace; color: var(--text-muted); font-size: .75rem; }
+    .eval.highlight { color: var(--neon); }
+    .eval.muted { color: var(--text-dim); font-style: italic; }
+
+    /* Tips box */
+    .tip-box {
+      background: rgba(167,139,250,.06);
+      border: 1px solid rgba(167,139,250,.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 2rem;
+    }
+    .tip-box-title {
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--purple);
+      margin-bottom: .5rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .tip-box ul {
+      padding-left: 1.25rem;
+      color: var(--text-muted);
+      font-size: .83rem;
+      line-height: 2;
+    }
+    .tip-box ul li strong { color: var(--text); }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      color: var(--text-muted);
+      font-size: .85rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color .15s;
+    }
+    .back-link:hover { color: var(--neon); }
+
+    @media (max-width: 640px) {
+      .panel-hero { flex-direction: column; align-items: flex-start; }
+      .panel-deploy-btn { margin-left: 0; }
+      .deploy-header h1 { font-size: 1.75rem; }
+      .platform-tabs { gap: .375rem; }
+      .ptab { font-size: .8rem; padding: .55rem .875rem; }
+    }
+  </style>
+</head>
+<body class="grid-bg">
+
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.102.546 4.07 1.5 5.78L.057 23.617a.75.75 0 0 0 .934.876l6.141-1.608A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.731 9.731 0 0 1-4.953-1.353l-.354-.213-3.642.955.97-3.546-.232-.365A9.708 9.708 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      </div>
+      <span class="logo-name">Sigma <span>MDX</span></span>
+    </a>
+    <nav id="nav-links">
+      <a href="/" data-i18n="nav.home">Accueil</a>
+      <a href="/builder.html" data-i18n="nav.builder">Créateur</a>
+      <a href="/session.html" data-i18n="nav.session">Obtenir Session</a>
+      <a href="/shared.html" data-i18n="nav.shared">Bot Partagé</a>
+      <a href="/deploy.html" style="color:var(--neon)" data-i18n="nav.deploy">Guide Déploiement</a>
+    </nav>
+    <div class="navbar-end">
+      <button class="lang-btn" id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="deploy-wrap">
+    <a href="/builder.html" class="back-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span data-i18n="deploy.back">← Retour au Créateur</span>
+    </a>
+
+    <div class="deploy-header">
+      <div class="deploy-eyebrow" data-i18n="deploy.eyebrow">Étape 5 — Déploiement</div>
+      <h1 data-i18n-html="deploy.h1">Déployez votre <span>Bot WhatsApp</span></h1>
+      <p data-i18n="deploy.sub">Choisissez une plateforme et suivez le guide étape par étape pour mettre votre bot en ligne en quelques minutes.</p>
+      <div id="botNameBadge" style="display:none">
+        <div class="bot-name-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="botNameText"></span> — bot downloaded
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-tabs" id="platformTabs">
+      <div class="ptab active" data-platform="railway" onclick="switchPlatform('railway')">
+        <span class="ptab-icon">🚂</span> Railway
+      </div>
+      <div class="ptab" data-platform="render" onclick="switchPlatform('render')">
+        <span class="ptab-icon">🌿</span> Render
+      </div>
+      <div class="ptab" data-platform="koyeb" onclick="switchPlatform('koyeb')">
+        <span class="ptab-icon">🔺</span> Koyeb
+      </div>
+      <div class="ptab" data-platform="heroku" onclick="switchPlatform('heroku')">
+        <span class="ptab-icon">🟣</span> Heroku
+      </div>
+    </div>
+
+    <!-- ══════════════ RAILWAY ══════════════ -->
+    <div class="platform-panel active" id="panel-railway">
+      <div class="panel-hero">
+        <div class="panel-hero-icon">🚂</div>
+        <div>
+          <div class="panel-hero-title" data-i18n="deploy.railway.title">Déployer sur Railway</div>
+          <div class="panel-hero-desc" data-i18n="deploy.railway.desc">Plan démarrage gratuit · Conteneurs toujours actifs · Déploiements auto depuis GitHub · Sans carte bancaire.</div>
+        </div>
+        <a href="https://railway.app" target="_blank" class="btn btn-primary panel-deploy-btn">
+          Open Railway →
+        </a>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-card">
+          <div class="step-num-badge">1</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.railway.s1">Créer un compte Railway gratuit</div>
+            <div class="step-desc">Go to <a href="https://railway.app" target="_blank">railway.app</a> and sign up with GitHub. It's free — no credit card needed to start.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">2</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.railway.s2">Créer un nouveau projet → Déployer depuis GitHub</div>
+            <div class="step-desc">
+              Click <strong>+ New Project</strong> → <strong>Deploy from GitHub repo</strong>.<br>
+              If you haven't pushed your bot to GitHub yet, first push it:
+              <div class="env-box" style="margin-top:.625rem">
+                <div class="env-box-header">Terminal commands</div>
+                <div style="padding:.75rem 1rem;font-family:monospace;font-size:.8rem;color:var(--text-muted);line-height:2">
+                  cd your-bot-folder/<br>
+                  git init<br>
+                  git add .<br>
+                  git commit -m "Initial bot setup"<br>
+                  <span style="color:var(--text-dim)"># Then create a GitHub repo and push</span><br>
+                  git remote add origin https://github.com/you/your-bot.git<br>
+                  git push -u origin main
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">3</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.railway.s3">Ajouter vos variables d'environnement</div>
+            <div class="step-desc">
+              In your Railway project → <strong>Variables</strong> tab → add these:
+              <div class="env-box">
+                <div class="env-box-header">Required environment variables</div>
+                <div class="env-var-row"><span class="ekey">SESSION_ID</span><span class="eval highlight">Your SIGMA-MDX~ session ID</span></div>
+                <div class="env-var-row"><span class="ekey">BOT_NAME</span><span class="eval">Your bot name</span></div>
+                <div class="env-var-row"><span class="ekey">OWNER_NUMBER</span><span class="eval">+32466304227 (with country code)</span></div>
+                <div class="env-var-row"><span class="ekey">PREFIX</span><span class="eval">. (or your chosen prefix)</span></div>
+                <div class="env-var-row"><span class="ekey">MODE</span><span class="eval">public / private / inbox / group</span></div>
+                <div class="env-var-row"><span class="ekey">NODE_ENV</span><span class="eval">production</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">4</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.railway.s4">Déployer & vérifier</div>
+            <div class="step-desc">Click <strong>Deploy</strong>. Railway will install dependencies and start your bot automatically. Check the <strong>Logs</strong> tab — you should see <code>WhatsApp connection established</code> within 60 seconds.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">5</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.railway.s5">Maintenir actif (optionnel)</div>
+            <div class="step-desc">Free plan includes 500 hours/month. To stay always-on, upgrade to the <strong>Hobby</strong> plan ($5/mo) or use Railway's <strong>sleep prevention</strong> setting in the service configuration.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-box-title" data-i18n="deploy.railway.tips">💡 Conseils Railway</div>
+        <ul>
+          <li>Railway automatically uses your <code>package.json</code> <strong>start</strong> script (<code>node index.js</code>)</li>
+          <li>The <code>railway.toml</code> in your ZIP is already configured — no extra setup needed</li>
+          <li>Use <strong>Redeploy</strong> button after changing env vars to apply them</li>
+          <li>Railway's free tier restarts after 1h of inactivity — normal for the first deploy</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════ RENDER ══════════════ -->
+    <div class="platform-panel" id="panel-render">
+      <div class="panel-hero">
+        <div class="panel-hero-icon">🌿</div>
+        <div>
+          <div class="panel-hero-title" data-i18n="deploy.render.title">Déployer sur Render</div>
+          <div class="panel-hero-desc" data-i18n="deploy.render.desc">Services web gratuits · Déploiements auto depuis GitHub · 750 heures gratuites/mois · Sans carte bancaire.</div>
+        </div>
+        <a href="https://render.com" target="_blank" class="btn btn-primary panel-deploy-btn">
+          Open Render →
+        </a>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-card">
+          <div class="step-num-badge">1</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.render.s1">S'inscrire & connecter GitHub</div>
+            <div class="step-desc">Go to <a href="https://render.com" target="_blank">render.com</a> → Sign up with GitHub → authorize Render to access your repositories.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">2</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.render.s2">Pousser votre bot sur GitHub</div>
+            <div class="step-desc">Upload your bot ZIP to a GitHub repo (public or private). Render supports both.
+              <div class="env-box" style="margin-top:.625rem">
+                <div style="padding:.75rem 1rem;font-family:monospace;font-size:.8rem;color:var(--text-muted);line-height:2">
+                  git init &amp;&amp; git add . &amp;&amp; git commit -m "Bot setup"<br>
+                  git remote add origin https://github.com/you/bot.git<br>
+                  git push -u origin main
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">3</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.render.s3">Créer un nouveau Web Service</div>
+            <div class="step-desc">
+              Click <strong>New → Web Service</strong> → select your repo.<br>
+              Set <strong>Environment</strong> to <code>Node</code>, <strong>Build Command</strong> to <code>npm install</code>, <strong>Start Command</strong> to <code>npm start</code>.
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">4</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.render.s4">Ajouter des variables d'environnement</div>
+            <div class="step-desc">
+              In <strong>Environment</strong> tab → <strong>Add Environment Variable</strong>:
+              <div class="env-box">
+                <div class="env-box-header">Required variables</div>
+                <div class="env-var-row"><span class="ekey">SESSION_ID</span><span class="eval highlight">Your SIGMA-MDX~ session ID</span></div>
+                <div class="env-var-row"><span class="ekey">BOT_NAME</span><span class="eval">Your bot name</span></div>
+                <div class="env-var-row"><span class="ekey">OWNER_NUMBER</span><span class="eval">+32466304227</span></div>
+                <div class="env-var-row"><span class="ekey">PREFIX</span><span class="eval">.</span></div>
+                <div class="env-var-row"><span class="ekey">MODE</span><span class="eval">public</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">5</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.render.s5">Déployer</div>
+            <div class="step-desc">Click <strong>Create Web Service</strong>. Render will build &amp; deploy automatically. Check logs to confirm the bot starts up correctly.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-box-title" data-i18n="deploy.render.tips">💡 Conseils Render</div>
+        <ul>
+          <li>Free tier spins down after 15 min of inactivity — use a cron ping (UptimeRobot) to keep it awake</li>
+          <li>The <code>render.yaml</code> in your ZIP is pre-configured for zero-setup deploy</li>
+          <li>Enable <strong>Auto-Deploy</strong> to redeploy on every GitHub push</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════ KOYEB ══════════════ -->
+    <div class="platform-panel" id="panel-koyeb">
+      <div class="panel-hero">
+        <div class="panel-hero-icon">🔺</div>
+        <div>
+          <div class="panel-hero-title" data-i18n="deploy.koyeb.title">Déployer sur Koyeb</div>
+          <div class="panel-hero-desc" data-i18n="deploy.koyeb.desc">Niveau gratuit généreux · Conteneurs toujours actifs · Déploiement global · Pas de mise en veille.</div>
+        </div>
+        <a href="https://app.koyeb.com" target="_blank" class="btn btn-primary panel-deploy-btn">
+          Open Koyeb →
+        </a>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-card">
+          <div class="step-num-badge">1</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.koyeb.s1">Créer un compte Koyeb</div>
+            <div class="step-desc">Go to <a href="https://app.koyeb.com" target="_blank">app.koyeb.com</a> → sign up for free. No credit card required for the Starter plan.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">2</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.koyeb.s2">Créer une nouvelle App depuis GitHub</div>
+            <div class="step-desc">Click <strong>Create App</strong> → select <strong>GitHub</strong> as the deployment source → authorize and select your repository.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">3</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.koyeb.s3">Configurer le service</div>
+            <div class="step-desc">
+              Set <strong>Runtime</strong> to <code>Node.js</code>.<br>
+              Set <strong>Run command</strong> to <code>npm start</code>.<br>
+              Set <strong>Instance type</strong> to <strong>eco</strong> (free).
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">4</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.koyeb.s4">Ajouter des variables d'environnement</div>
+            <div class="step-desc">
+              In the <strong>Environment variables</strong> section:
+              <div class="env-box">
+                <div class="env-box-header">Required variables</div>
+                <div class="env-var-row"><span class="ekey">SESSION_ID</span><span class="eval highlight">Your SIGMA-MDX~ session ID</span></div>
+                <div class="env-var-row"><span class="ekey">BOT_NAME</span><span class="eval">Your bot name</span></div>
+                <div class="env-var-row"><span class="ekey">OWNER_NUMBER</span><span class="eval">+32466304227</span></div>
+                <div class="env-var-row"><span class="ekey">PREFIX</span><span class="eval">.</span></div>
+                <div class="env-var-row"><span class="ekey">MODE</span><span class="eval">public</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">5</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.koyeb.s5">Déployer & vérifier</div>
+            <div class="step-desc">Click <strong>Deploy</strong>. Koyeb's free plan includes always-on containers — no sleep! Check the <strong>Logs</strong> to confirm the bot connects to WhatsApp.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-box-title" data-i18n="deploy.koyeb.tips">💡 Conseils Koyeb</div>
+        <ul>
+          <li><strong>Best free option</strong> — Koyeb's free tier does NOT sleep like Render's</li>
+          <li>The <code>koyeb.yaml</code> in your ZIP is pre-configured</li>
+          <li>Set <strong>Health check</strong> to disabled if your bot doesn't expose an HTTP port</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════ HEROKU ══════════════ -->
+    <div class="platform-panel" id="panel-heroku">
+      <div class="panel-hero">
+        <div class="panel-hero-icon">🟣</div>
+        <div>
+          <div class="panel-hero-title" data-i18n="deploy.heroku.title">Déployer sur Heroku</div>
+          <div class="panel-hero-desc" data-i18n="deploy.heroku.desc">PaaS fiable · Dyno Eco à 5$/mois · Intégration GitHub facile · Infrastructure de production.</div>
+        </div>
+        <a href="https://heroku.com" target="_blank" class="btn btn-primary panel-deploy-btn">
+          Open Heroku →
+        </a>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-card">
+          <div class="step-num-badge">1</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.heroku.s1">Créer un compte Heroku & installer le CLI</div>
+            <div class="step-desc">Sign up at <a href="https://signup.heroku.com" target="_blank">signup.heroku.com</a>. Then install the <a href="https://devcenter.heroku.com/articles/heroku-cli" target="_blank">Heroku CLI</a> on your machine.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">2</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.heroku.s2">Créer une nouvelle app Heroku</div>
+            <div class="step-desc">
+              <div class="env-box">
+                <div style="padding:.75rem 1rem;font-family:monospace;font-size:.8rem;color:var(--text-muted);line-height:2">
+                  heroku login<br>
+                  heroku create your-bot-name<br>
+                  git init &amp;&amp; git add . &amp;&amp; git commit -m "Bot setup"<br>
+                  heroku git:remote -a your-bot-name<br>
+                  git push heroku main
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">3</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.heroku.s3">Définir les variables d'environnement</div>
+            <div class="step-desc">
+              Via CLI or Heroku Dashboard → Settings → Config Vars:
+              <div class="env-box">
+                <div class="env-box-header">Config Vars</div>
+                <div class="env-var-row"><span class="ekey">SESSION_ID</span><span class="eval highlight">Your SIGMA-MDX~ session ID</span></div>
+                <div class="env-var-row"><span class="ekey">BOT_NAME</span><span class="eval">Your bot name</span></div>
+                <div class="env-var-row"><span class="ekey">OWNER_NUMBER</span><span class="eval">+32466304227</span></div>
+                <div class="env-var-row"><span class="ekey">PREFIX</span><span class="eval">.</span></div>
+                <div class="env-var-row"><span class="ekey">MODE</span><span class="eval">public</span></div>
+              </div>
+              <br>Or via CLI: <code>heroku config:set SESSION_ID=SIGMA-MDX~xxxx BOT_NAME=MyBot</code>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">4</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.heroku.s4">Mettre à l'échelle le dyno</div>
+            <div class="step-desc">
+              <code>heroku ps:scale worker=1</code><br>
+              Your <code>Procfile</code> (included in the ZIP) declares: <code>worker: node index.js</code>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-badge">5</div>
+          <div class="step-content">
+            <div class="step-title" data-i18n="deploy.heroku.s5">Vérifier les logs</div>
+            <div class="step-desc"><code>heroku logs --tail</code> — watch for <em>WhatsApp connection established</em> to confirm the bot is running.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-box-title" data-i18n="deploy.heroku.tips">💡 Conseils Heroku</div>
+        <ul>
+          <li>Use <strong>Eco dynos</strong> ($5/mo for 1000 hrs) — basic dynos sleep after 30min on free tier</li>
+          <li>The <code>app.json</code> and <code>Procfile</code> in your ZIP are pre-configured for Heroku</li>
+          <li>Add a <strong>PostgreSQL</strong> add-on if you want persistent database: <code>heroku addons:create heroku-postgresql:mini</code></li>
+          <li>Use <strong>Heroku Scheduler</strong> add-on for cron jobs if needed</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const platform = urlParams.get('platform');
+    const botName = urlParams.get('botName');
+
+    if (botName) {
+      document.getElementById('botNameBadge').style.display = 'block';
+      document.getElementById('botNameText').textContent = botName;
+    }
+
+    if (platform) {
+      switchPlatform(platform);
+    }
+
+    function switchPlatform(name) {
+      document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.platform-panel').forEach(p => p.classList.remove('active'));
+      const tab = document.querySelector(`.ptab[data-platform="${name}"]`);
+      const panel = document.getElementById(`panel-${name}`);
+      if (tab) tab.classList.add('active');
+      if (panel) panel.classList.add('active');
+    }
+  </script>
+  <script src="/js/i18n.js"></script>
+</body>
+</html>

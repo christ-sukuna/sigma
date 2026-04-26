@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin VPS — Sigma MDX</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .page-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; letter-spacing: -.03em; margin-bottom: .4rem; }
+    .page-title span { color: var(--neon); }
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin: 2rem 0 1rem; flex-wrap: wrap; gap: .5rem; }
+    .section-head h2 { font-size: 1rem; font-weight: 700; color: #8a9ab0; text-transform: uppercase; letter-spacing: .05em; }
+    .table-wrap { background: #0d1825; border: 1px solid #1a2a3a; border-radius: 12px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; color: #6b8095; font-size: .78rem; text-transform: uppercase; padding: .7rem 1rem; border-bottom: 1px solid #1a2a3a; }
+    td { padding: .75rem 1rem; border-bottom: 1px solid #0f1f2e; font-size: .88rem; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .badge { display: inline-flex; align-items: center; gap: .3rem; padding: .18rem .6rem; border-radius: 20px; font-size: .72rem; font-weight: 600; }
+    .badge.free { background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.25); }
+    .badge.pro { background: rgba(0,230,118,.12); color: #00e676; border: 1px solid rgba(0,230,118,.25); }
+    .badge.connected { background: rgba(0,230,118,.12); color: #00e676; }
+    .badge.stopped { background: rgba(74,85,104,.2); color: #718096; }
+    .badge.error { background: rgba(255,82,82,.12); color: #ff5252; }
+    .badge.deploying { background: rgba(251,191,36,.12); color: #fbbf24; }
+    .btn-sm { padding: .3rem .7rem; font-size: .78rem; border-radius: 7px; border: 1px solid rgba(167,139,250,.3); background: rgba(167,139,250,.08); color: #a78bfa; cursor: pointer; transition: all .2s; }
+    .btn-sm:hover { background: rgba(167,139,250,.18); }
+    .stats-mini { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .875rem; margin-bottom: 2rem; }
+    .stat-mini { background: #0d1825; border: 1px solid #1a2a3a; border-radius: 10px; padding: 1rem 1.25rem; }
+    .stat-mini .num { font-size: 1.6rem; font-weight: 800; }
+    .stat-mini .lbl { font-size: .75rem; color: #6b8095; text-transform: uppercase; letter-spacing: .04em; margin-top: .2rem; }
+    .empty { text-align: center; padding: 3rem; color: #6b8095; }
+    .plan-form { display: flex; align-items: center; gap: .4rem; }
+    .plan-form select { background: #0d1825; border: 1px solid #1a2a3a; color: #e0eaf5; border-radius: 6px; padding: .25rem .5rem; font-size: .78rem; }
+    .plan-form input[type=number] { background: #0d1825; border: 1px solid #1a2a3a; color: #e0eaf5; border-radius: 6px; padding: .25rem .45rem; width: 52px; font-size: .78rem; }
+    .auth-wall { max-width: 360px; margin: 8rem auto; text-align: center; background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem 2rem; }
+    .auth-wall h2 { margin-bottom: .75rem; }
+    .auth-wall p { color: #6b8095; font-size: .88rem; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="brand-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+    <span class="brand-name">Sigma <span class="brand-accent">MDX</span></span>
+  </a>
+  <nav id="nav-links">
+    <a href="/">Accueil</a>
+    <a href="/vps.html">Mes Bots</a>
+    <a href="/status.html">Statut VPS</a>
+    <a href="/vps-admin.html" class="active">Admin VPS</a>
+  </nav>
+  <div class="navbar-end">
+    <button class="nav-toggle" aria-label="Menu" onclick="document.getElementById('nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div id="auth-wall" class="auth-wall" style="display:none">
+  <h2>🔒 Accès Admin</h2>
+  <p>Cette page est réservée aux administrateurs Sigma MDX.</p>
+  <a href="/vps.html" class="btn btn-primary" style="display:inline-flex;margin-top:.5rem">← Mes Bots</a>
+</div>
+
+<div class="wrap" id="main-content" style="display:none">
+  <div class="page-title">Admin <span>VPS</span></div>
+  <p style="color:#6b8095;margin-bottom:2rem">Gestion globale des utilisateurs et bots déployés.</p>
+
+  <div class="stats-mini" id="stats-mini">
+    <div class="stat-mini"><div class="num" id="s-users">—</div><div class="lbl">Utilisateurs</div></div>
+    <div class="stat-mini"><div class="num" id="s-bots">—</div><div class="lbl">Bots total</div></div>
+    <div class="stat-mini"><div class="num" id="s-connected" style="color:#00e676">—</div><div class="lbl">Bots connectés</div></div>
+    <div class="stat-mini"><div class="num" id="s-msgs" style="color:#a78bfa">—</div><div class="lbl">Messages traités</div></div>
+  </div>
+
+  <div class="section-head">
+    <h2>👥 Utilisateurs</h2>
+    <button class="btn-sm" onclick="loadAll()">↺ Actualiser</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Email</th><th>Plan</th><th>Bots</th><th>Inscrit le</th><th>Actions</th></tr></thead>
+      <tbody id="users-body"><tr><td colspan="5" class="empty">Chargement...</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="section-head" style="margin-top:2.5rem">
+    <h2>🤖 Bots déployés</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nom</th><th>Téléphone</th><th>Statut</th><th>Uptime PM2</th><th>RAM</th><th>Messages</th><th>Déployé le</th></tr></thead>
+      <tbody id="bots-body"><tr><td colspan="7" class="empty">Chargement...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const _token = localStorage.getItem('sigma_token');
+
+  function fmt(ms) {
+    if (!ms) return '—';
+    const diff = Date.now() - ms;
+    const m = Math.floor(diff / 60000);
+    if (m < 60) return m + 'm';
+    const h = Math.floor(m / 60);
+    if (h < 24) return h + 'h' + (m%60) + 'm';
+    return Math.floor(h/24) + 'j' + (h%24) + 'h';
+  }
+  function fmtBytes(b) {
+    if (!b) return '—';
+    const mb = b / 1024 / 1024;
+    return mb >= 1024 ? (mb/1024).toFixed(1)+'Go' : Math.round(mb)+'Mo';
+  }
+  function fmtDate(d) {
+    return d ? new Date(d).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+  }
+  function statusBadge(st) {
+    const lbl = { connected:'Connecté', stopped:'Arrêté', error:'Erreur', deploying:'Déploiement', waiting_pair:'Attente code' }[st] || st;
+    return `<span class="badge ${st||'stopped'}">${lbl}</span>`;
+  }
+
+  async function aFetch(url, opts = {}) {
+    return fetch(url, { ...opts, headers: { ...(opts.headers||{}), 'Authorization': `Bearer ${_token}`, 'Content-Type': 'application/json' } });
+  }
+
+  async function loadAll() {
+    if (!_token) { showWall(); return; }
+
+    // Load users
+    const ru = await aFetch('/api/vps/admin/users');
+    if (ru.status === 403 || ru.status === 401) { showWall(); return; }
+    showMain();
+    const users = await ru.json();
+
+    document.getElementById('s-users').textContent = users.length;
+    document.getElementById('users-body').innerHTML = users.length
+      ? users.map(u => `
+        <tr>
+          <td><strong>${u.email}</strong>${u.isAdmin ? ' <span style="color:#fbbf24;font-size:.72rem">★ admin</span>' : ''}</td>
+          <td>
+            <div class="plan-form">
+              <span class="badge ${u.plan||'free'}">${(u.plan||'free').toUpperCase()}</span>
+              <select id="plan-sel-${u._id}" onchange="void 0">
+                <option value="free" ${u.plan==='free'?'selected':''}>Free</option>
+                <option value="pro" ${u.plan==='pro'?'selected':''}>Pro</option>
+              </select>
+              <input type="number" id="bots-sel-${u._id}" value="${u.maxBots||1}" min="1" max="50" />
+              <button class="btn-sm" onclick="updatePlan('${u._id}')">✓</button>
+            </div>
+          </td>
+          <td>${u.connectedBots}/${u.botCount} <span style="color:#6b8095;font-size:.78rem">connectés</span></td>
+          <td>${fmtDate(u.createdAt)}</td>
+          <td style="color:#6b8095;font-size:.78rem">${u._id}</td>
+        </tr>`).join('')
+      : `<tr><td colspan="5" class="empty">Aucun utilisateur.</td></tr>`;
+
+    // Load bots
+    const rb = await aFetch('/api/vps/admin/sessions');
+    const bots = await rb.json();
+
+    const total = bots.length;
+    const connected = bots.filter(b => b.status === 'connected').length;
+    const msgs = bots.reduce((s, b) => s + (b.msgCount || 0), 0);
+    document.getElementById('s-bots').textContent = total;
+    document.getElementById('s-connected').textContent = connected;
+    document.getElementById('s-msgs').textContent = msgs.toLocaleString('fr-FR');
+
+    document.getElementById('bots-body').innerHTML = bots.length
+      ? bots.map(b => `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:.5rem">
+              <span class="health-dot ${b.status||'stopped'}"></span>
+              <strong>${b.displayName || b.botName}</strong>
+              ${b.displayName && b.displayName !== b.botName ? `<span style="color:#4a5a6a;font-size:.72rem">(${b.botName})</span>` : ''}
+            </div>
+          </td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.82rem">${b.phoneNumber}</td>
+          <td>${statusBadge(b.status)}</td>
+          <td>${fmt(b.pm2Uptime)}</td>
+          <td>${fmtBytes(b.pm2Memory)}</td>
+          <td style="color:#a78bfa">${(b.msgCount||0).toLocaleString('fr-FR')}</td>
+          <td>${fmtDate(b.deployedAt)}</td>
+        </tr>`).join('')
+      : `<tr><td colspan="7" class="empty">Aucun bot déployé.</td></tr>`;
+  }
+
+  async function updatePlan(userId) {
+    const plan = document.getElementById(`plan-sel-${userId}`).value;
+    const maxBots = parseInt(document.getElementById(`bots-sel-${userId}`).value) || 1;
+    const r = await aFetch(`/api/vps/admin/user/${userId}/plan`, { method: 'PUT', body: JSON.stringify({ plan, maxBots }) });
+    if (r.ok) { loadAll(); } else { alert('Erreur lors de la mise à jour.'); }
+  }
+
+  function showWall() {
+    document.getElementById('auth-wall').style.display = 'block';
+    document.getElementById('main-content').style.display = 'none';
+  }
+  function showMain() {
+    document.getElementById('auth-wall').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+  }
+
+  if (!_token) { showWall(); } else { loadAll(); }
+</script>
+</body>
+</html>
